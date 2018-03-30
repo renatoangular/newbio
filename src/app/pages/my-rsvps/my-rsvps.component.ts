@@ -44,7 +44,7 @@ export class MyRsvpsComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
         err => {
-          console.error(err);
+          console.log(err);
           this.loading = false;
           this.error = true;
         }

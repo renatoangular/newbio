@@ -10,10 +10,10 @@ interface AuthConfig {
 };
 
 export const AUTH_CONFIG: AuthConfig = {
-  CLIENT_ID: '[AUTH0_CLIENT_ID]',
-  CLIENT_DOMAIN: '[AUTH0_CLIENT_DOMAIN]', // e.g., kmaida.auth0.com
-  AUDIENCE: '[YOUR_AUTH0_API_AUDIENCE]', // e.g., http://localhost:8083/api/
+  CLIENT_ID: '079LNYzuCgG0OuJj5uUprtKUbPS0Ctfs',
+  CLIENT_DOMAIN: 'biol.auth0.com', // e.g., kmaida.auth0.com
+  AUDIENCE: 'https://biol.auth0.com/api/v2/', // e.g., http://localhost:8083/api/
   REDIRECT: `${ENV.BASE_URI}/callback`,
-  SCOPE: 'openid profile',
+  SCOPE: 'openid',
   NAMESPACE: 'http://myapp.com/roles'
 };

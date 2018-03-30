@@ -15,7 +15,9 @@ export class ApiService {
     private auth: AuthService) { }
 
   private get _authHeader(): string {
+    console.log(`Bearer ${localStorage.getItem('access_token')}`);
     return `Bearer ${localStorage.getItem('access_token')}`;
+
   }
 
   // GET list of public, future events

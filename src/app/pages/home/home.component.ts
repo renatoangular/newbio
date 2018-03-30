@@ -5,6 +5,7 @@ import { UtilsService } from './../../core/utils.service';
 import { FilterSortService } from './../../core/filter-sort.service';
 import { Subscription } from 'rxjs/Subscription';
 import { EventModel } from './../../core/models/event.model';
+import { AuthService } from './../../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -24,11 +25,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     private title: Title,
     public utils: UtilsService,
     private api: ApiService,
+    public auth: AuthService,
     public fs: FilterSortService) { }
 
   ngOnInit() {
     this.title.setTitle(this.pageTitle);
     this._getEventList();
+    console.log(this.auth.userProfile);
   }
 
   private _getEventList() {
@@ -43,7 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
         err => {
-          console.error(err);
+          console.log(err);
           this.loading = false;
           this.error = true;
         }
