@@ -76,4 +76,5 @@ if (process.env.NODE_ENV !== 'dev') {
  |--------------------------------------
  */
 
-app.listen(port, () => console.log(`Server running on localhost:${port}`));
+//app.listen(port, );
+app.listen(process.env.PORT || port, () => console.log(`Server running on localhost:${port}`));
