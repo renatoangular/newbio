@@ -69,7 +69,7 @@ export class AuthService {
       } else if (err) {
         this._clearRedirect();
         this.router.navigate(['/']);
-        console.error(`Error authenticating: ${err.error}`);
+        console.error(`Errrrrrrrror authenticating: ${err.error}`);
       }
     });
   }
