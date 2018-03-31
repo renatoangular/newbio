@@ -7,7 +7,9 @@ import { AdminComponent } from './admin.component';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { UpdateEventComponent } from './update-event/update-event.component';
 import { EventFormComponent } from './event-form/event-form.component';
+import { DonationsFormComponent } from './donations-form/donations-form.component';
 import { DeleteEventComponent } from './update-event/delete-event/delete-event.component';
+import {CreateDonationsComponent} from './create-donations/create-donations.component';
 
 @NgModule({
   imports: [
@@ -18,8 +20,10 @@ import { DeleteEventComponent } from './update-event/delete-event/delete-event.c
   declarations: [
     AdminComponent,
     CreateEventComponent,
+    CreateDonationsComponent,
     UpdateEventComponent,
     EventFormComponent,
+    DonationsFormComponent,
     DeleteEventComponent
   ]
 })

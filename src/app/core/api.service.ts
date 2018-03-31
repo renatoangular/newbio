@@ -7,6 +7,7 @@ import 'rxjs/add/observable/throw';
 import { ENV } from './env.config';
 import { EventModel } from './models/event.model';
 import { RsvpModel } from './models/rsvp.model';
+import { DonationsModel } from './models/donations.model';
 
 @Injectable()
 export class ApiService {
@@ -45,6 +46,15 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // GET an event by ID (login required)
+    getDonationsById$(id: string): Observable<DonationsModel> {
+      return this.http
+        .get(`${ENV.BASE_API}donations/${id}`, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
+
   // GET RSVPs by event ID (login required)
   getRsvpsByEventId$(eventId: string): Observable<RsvpModel[]> {
     return this.http
@@ -63,6 +73,15 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // POST new donations (admin only)
+    postDonations$(donations: DonationsModel): Observable<DonationsModel> {
+      return this.http
+        .post(`${ENV.BASE_API}event/new`, event, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
+
   // PUT existing event (admin only)
   editEvent$(id: string, event: EventModel): Observable<EventModel> {
     return this.http
@@ -72,6 +91,15 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // PUT existing event (admin only)
+    editDonations$(id: string, donations: DonationsModel): Observable<DonationsModel> {
+      return this.http
+        .put(`${ENV.BASE_API}donations/${id}`, donations, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
+
   // DELETE existing event and all associated RSVPs (admin only)
   deleteEvent$(id: string): Observable<any> {
     return this.http
@@ -80,6 +108,15 @@ export class ApiService {
       })
       .catch(this._handleError);
   }
+
+    // DELETE existing donation and all associated RSVPs (admin only)
+    deleteDonations$(id: string): Observable<any> {
+      return this.http
+        .delete(`${ENV.BASE_API}donations/${id}`, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
 
   // GET all events a specific user has RSVPed to (login required)
   getUserEvents$(userId: string): Observable<EventModel[]> {

@@ -10,7 +10,7 @@ class EventModel {
   ) { }
 }
 
-class FormEventModel {
+ class FormEventModel {
   constructor(
     public title: string,
     public location: string,

@@ -7,6 +7,7 @@ import { AdminGuard } from './auth/admin.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { CallbackComponent } from './pages/callback/callback.component';
 import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
+import { DonationsComponent } from './pages/donations/donations.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,16 @@ const routes: Routes = [
       AdminGuard
     ]
   },
+
+  {
+    path: 'donations',
+    loadChildren: './pages/donations/donations.module#DonationsModule',
+    canActivate: [
+      AuthGuard
+    ]
+  },
+
+
   {
     path: '**',
     redirectTo: '',
