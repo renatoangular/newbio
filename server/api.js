@@ -8,6 +8,7 @@ const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const Event = require('./models/Event');
 const Rsvp = require('./models/Rsvp');
+const Donation = require('./models/Donations')
 
 /*
  |--------------------------------------
@@ -172,6 +173,34 @@ module.exports = function(app, config) {
       });
     });
   });
+
+// POST a new donation
+app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
+  Donation.findOne({
+    itemName: req.body.itemName,
+    donatedBy: req.body.donatedBy,
+    donatedDatetime: req.body.donatedDatetime}, (err, existingEvent) => {
+    if (err) {
+      return res.status(500).send({message: err.message});
+    }
+    if (existingEvent) {
+      return res.status(409).send({message: 'You have already created an item with this name, location, and start date/time.'});
+    }
+    const donation = new Donation({
+      itemName: req.body.itemName,
+      donatedBy: req.body.donatedBy,
+      donatedDatetime: req.body.donatedDatetime,
+      description: req.body.description,
+      viewPublic: req.body.viewPublic
+    });
+    donation.save((err) => {
+      if (err) {
+        return res.status(500).send({message: 'test' +err.message});
+      }
+      res.send(donation);
+    });
+  });
+});
 
   // PUT (edit) an existing event
   app.put('/api/event/:id', jwtCheck, adminCheck, (req, res) => {

@@ -76,7 +76,7 @@ export class ApiService {
     // POST new donations (admin only)
     postDonations$(donations: DonationsModel): Observable<DonationsModel> {
       return this.http
-        .post(`${ENV.BASE_API}event/new`, event, {
+        .post(`${ENV.BASE_API}donations/new`, donations, {
           headers: new HttpHeaders().set('Authorization', this._authHeader)
         })
         .catch(this._handleError);

@@ -17,98 +17,36 @@
 
   <!-- Location -->
   <div class="form-group">
-    <label for="location">Donated By</label>
+    <label for="donatedBy">Donated By</label>
     <input
-      id="location"
+      id="donatedBy"
       type="text"
       class="form-control"
-      formControlName="location"
+      formControlName="donatedBy"
       [maxlength]="df.locMax">
     <div
-      *ngIf="formErrors.location"
+      *ngIf="formErrors.datesGroup.donatedBy"
       class="small text-danger formErrors"
-      [innerHTML]="formErrors.location">
+      [innerHTML]="formErrors.datesGroup.donatedBy">
     </div>
   </div>
 
   <div
     formGroupName="datesGroup"
-    [ngClass]="{'has-danger': eventForm.get('datesGroup').errors}">
+    >
     <div class="row">
       <!-- Start date -->
       <div class="form-group col-sm-12 col-md-6">
-        <label for="startDate">Start Date</label>
+        <label for="donatedDatetime">Donated Date</label>
         <input
-          id="startDate"
+          id="donatedDatetime"
           type="text"
           class="form-control"
-          formControlName="startDate"
-          [placeholder]="df.dateFormat"
-          [maxlength]="df.dateMax">
-        <div
-          *ngIf="formErrors.datesGroup.startDate"
-          class="small text-danger formErrors"
-          [innerHTML]="formErrors.datesGroup.startDate">
-        </div>
-      </div>
-
-      <!-- Start time -->
-      <div class="form-group col-sm-12 col-md-6">
-        <label for="startTime">Start Time</label>
-        <input
-          id="startTime"
-          type="text"
-          class="form-control"
-          formControlName="startTime"
-          [placeholder]="ef.timeFormat"
-          [maxlength]="ef.timeMax">
-        <div
-          *ngIf="formErrors.datesGroup.startTime"
-          class="small text-danger formErrors"
-          [innerHTML]="formErrors.datesGroup.startTime">
-        </div>
-      </div>
+          formControlName="donatedDatetime"
+          >
+       </div>
     </div>
 
-    <div class="row">
-      <!-- End date -->
-      <div class="form-group col-sm-12 col-md-6">
-        <label for="endDate">End Date</label>
-        <input
-          id="endDate"
-          type="text"
-          class="form-control"
-          formControlName="endDate"
-          [placeholder]="ef.dateFormat"
-          [maxlength]="ef.dateMax">
-        <div
-          *ngIf="formErrors.datesGroup.endDate"
-          class="small text-danger formErrors"
-          [innerHTML]="formErrors.datesGroup.endDate">
-        </div>
-      </div>
-
-      <!-- End time -->
-      <div class="form-group col-sm-12 col-md-6">
-        <label for="endTime">End Time</label>
-        <input
-          id="endTime"
-          type="text"
-          class="form-control"
-          formControlName="endTime"
-          [placeholder]="ef.timeFormat"
-          [maxlength]="ef.timeMax">
-        <div
-          *ngIf="formErrors.datesGroup.endTime"
-          class="small text-danger formErrors"
-          [innerHTML]="formErrors.datesGroup.endTime">
-        </div>
-      </div>
-    </div>
-
-    <p *ngIf="eventForm.get('datesGroup').errors" class="alert alert-danger small">
-      <strong>Dates/times out of range:</strong> Events cannot end before they begin. Please double-check the start and end dates and times.
-    </p>
   </div>
 
   <!-- View Public -->
@@ -149,7 +87,7 @@
       class="form-control"
       rows="3"
       formControlName="description"
-      [maxlength]="ef.descMax"></textarea>
+      [maxlength]="df.descMax"></textarea>
     <div
       *ngIf="formErrors.description"
       class="small text-danger formErrors"
@@ -158,11 +96,11 @@
   </div>
 
   <!-- Submit -->
+  <!-- Submit -->
   <div class="form-group">
     <button
       type="submit"
       class="btn btn-primary"
-      [attr.disabled]="eventForm.invalid || submitting ? true : null"
       [innerText]="submitBtnText"></button>
       <!-- https://github.com/angular/angular/issues/11271#issuecomment-289806196 -->
     <app-submitting *ngIf="submitting"></app-submitting>
@@ -174,7 +112,7 @@
 
     <!-- API submission error -->
     <p *ngIf="error" class="mt-3 alert alert-danger">
-      <strong>Error:</strong> There was a problem submitting the event. Please try again.
+      <strong>Error:</strong> There was a problem submitting the item. Please try again.
     </p>
   </div>
 </form>

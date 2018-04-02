@@ -10,12 +10,14 @@ import { dateRangeValidator } from './../../../core/forms/date-range.validator';
 import { DATE_REGEX, TIME_REGEX, stringsToDate } from './../../../core/forms/formUtils.factory';
 import { EventFormService } from './event-form.service';
 
+
 @Component({
   selector: 'app-event-form',
   templateUrl: './event-form.component.html',
   styleUrls: ['./event-form.component.scss'],
   providers: [ EventFormService ]
 })
+
 export class EventFormComponent implements OnInit, OnDestroy {
   @Input() event: EventModel;
   isEdit: boolean;

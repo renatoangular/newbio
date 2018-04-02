@@ -90,7 +90,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         Validators.minLength(this.df.textMin),
         Validators.maxLength(this.df.titleMax)
       ]],
-      location: [this.formDonations.DonatedBy, [
+      donatedBy: [this.formDonations.DonatedBy, [
         Validators.required,
         Validators.minLength(this.df.textMin),
         Validators.maxLength(this.df.locMax)
@@ -102,18 +102,16 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         Validators.maxLength(this.df.descMax)
       ],
       datesGroup: this.fb.group({
-        startDate: [this.formDonations.donatedDatetime, [
+        donatedDatetime: [this.formDonations.donatedDatetime, [
           Validators.required,
           Validators.maxLength(this.df.dateMax),
           Validators.pattern(DATE_REGEX),
           dateValidator()
         ]],
-        startTime: [this.formDonations.checkedOutDatetime, [
-          Validators.required,
-          Validators.maxLength(this.df.timeMax),
-          Validators.pattern(TIME_REGEX)
+        checkedOutDatetime: [this.formDonations.checkedOutDatetime, [
+          Validators.maxLength(this.df.descMax)
         ]]
-      }, { validator: dateRangeValidator })
+      }, {})
     });
     // Set local property to eventForm datesGroup control
     this.datesGroup = this.donationsForm.get('datesGroup');
@@ -177,29 +175,15 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
   }
 
   private _getSubmitObj() {
-    const title = this.datesGroup.get('title').value;
-    const location = this.datesGroup.get('location').value;
+
     const donatedDatetime = this.datesGroup.get('donatedDatetime').value;
     const checkedOutDatetime = this.datesGroup.get('checkedOutDatetime').value;
-    const viewPublic = this.datesGroup.get('viewPublic').value;
-    const description = this.datesGroup.get('description').value;
-    // Convert form startDate/startTime and endDate/endTime
-    // to JS dates and populate a new EventModel for submission
-
-     /*
-    public title: string,
-    public location: string,
-    public donatedDatetime: string,
-    public checkedOutDatetime: string,
-    public viewPublic: boolean,
-    public description?: string   */
-
 
     return new DonationsModel(
-      this.donationsForm.get('title').value,
-      this.donationsForm.get('location').value,
-      stringsToDate(donatedDatetime, '12:00'),
-      stringsToDate(checkedOutDatetime, '12:00'),
+      this.donationsForm.get('itemName').value,
+      this.donationsForm.get('donatedBy').value,
+      this.datesGroup.get('donatedDatetime').value,
+      null,
       this.donationsForm.get('viewPublic').value,
       this.donationsForm.get('description').value,
       this.donation ? this.donation._id : null
@@ -235,7 +219,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
   }
 
   private _handleSubmitError(err) {
-    console.error(err);
+    console.log(err);
     this.submitting = false;
     this.error = true;
   }

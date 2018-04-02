@@ -38,7 +38,6 @@ monDb.once('open', function callback() {
  */
 
 const app = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride('X-HTTP-Method-Override'));
