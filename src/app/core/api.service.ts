@@ -7,7 +7,9 @@ import 'rxjs/add/observable/throw';
 import { ENV } from './env.config';
 import { EventModel } from './models/event.model';
 import { RsvpModel } from './models/rsvp.model';
+import { RequestModel } from './models/request.model';
 import { DonationsModel } from './models/donations.model';
+
 
 @Injectable()
 export class ApiService {
@@ -59,6 +61,14 @@ export class ApiService {
   getRsvpsByEventId$(eventId: string): Observable<RsvpModel[]> {
     return this.http
       .get(`${ENV.BASE_API}event/${eventId}/rsvps`, {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .catch(this._handleError);
+  }
+  // GET RSVPs by event ID (login required)
+  getRequestsByDonationsId$(DonationsId: string): Observable<RequestModel[]> {
+    return this.http
+      .get(`${ENV.BASE_API}donations/${DonationsId}/requests`, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
       })
       .catch(this._handleError);
@@ -136,6 +146,16 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // POST new request (login required)
+    postRequest$(request1: RequestModel): Observable<RequestModel> {
+      return this.http
+        .post(`${ENV.BASE_API}request/new`, request1, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
+
+
   // PUT existing RSVP (login required)
   editRsvp$(id: string, rsvp: RsvpModel): Observable<RsvpModel> {
     return this.http
@@ -144,6 +164,15 @@ export class ApiService {
       })
       .catch(this._handleError);
   }
+
+    // PUT existing RSVP (login required)
+    editRequest$(id: string, request1: RequestModel): Observable<RequestModel> {
+      return this.http
+        .put(`${ENV.BASE_API}rsvp/${id}`, request1, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
 
   private _handleError(err: HttpErrorResponse | any) {
     const errorMsg = err.message || 'Error: Unable to complete request.';

@@ -1,7 +1,8 @@
 class DonationsModel {
-  constructor(
+    constructor(
     public itemName: string,
     public donatedBy: string,
+    public category: string,
     public donatedDatetime: Date,
     public checkedOutDatetime: Date,
     public viewPublic: boolean,
@@ -14,7 +15,8 @@ class DonationsModel {
 class FormDonationsModel {
   constructor(
     public itemName: string,
-    public DonatedBy: string,
+    public donatedBy: string,
+    public category: string,
     public donatedDatetime: string,
     public checkedOutDatetime: string,
     public viewPublic: boolean,

@@ -9,6 +9,7 @@ import { dateValidator } from './../../../core/forms/date.validator';
 import { dateRangeValidator } from './../../../core/forms/date-range.validator';
 import { DATE_REGEX, TIME_REGEX, stringsToDate } from './../../../core/forms/formUtils.factory';
 import { DonationsFormService } from './donations-form.service';
+import { Country } from './Country';
 
 @Component({
   selector: 'app-donations-form',
@@ -19,6 +20,10 @@ import { DonationsFormService } from './donations-form.service';
 export class DonationsFormComponent implements OnInit, OnDestroy {
   @Input() donation: DonationsModel;
   isEdit: boolean;
+  countries = [
+    new Country(1, 'Misc'),
+    new Country(2, 'Hazardous')
+  ];
   // FormBuilder form
   donationsForm: FormGroup;
   datesGroup: AbstractControl;
@@ -33,6 +38,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
   error: boolean;
   submitting: boolean;
   submitBtnText: string;
+  selectedCountry: Country = new Country(1, 'Miscellaneous');
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +57,10 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     this._buildForm();
   }
 
+  onSelect(statusId) {
+    this.selectedCountry = statusId;
+
+  }
   private _setFormDonations() {
     if (!this.isEdit) {
       // If creating a new event, create new
@@ -67,6 +77,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
       return new FormDonationsModel(
         this.donation.itemName,
         this.donation.donatedBy,
+        this.donation.category,
         this.datePipe.transform(this.donation.donatedDatetime, '_shortDate'),
         this.datePipe.transform(this.donation.checkedOutDatetime, '_shortDate'),
         this.donation.viewPublic,
@@ -90,7 +101,12 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         Validators.minLength(this.df.textMin),
         Validators.maxLength(this.df.titleMax)
       ]],
-      donatedBy: [this.formDonations.DonatedBy, [
+      donatedBy: [this.formDonations.donatedBy, [
+        Validators.required,
+        Validators.minLength(this.df.textMin),
+        Validators.maxLength(this.df.locMax)
+      ]],
+      category: [this.formDonations.category, [
         Validators.required,
         Validators.minLength(this.df.textMin),
         Validators.maxLength(this.df.locMax)
@@ -182,6 +198,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     return new DonationsModel(
       this.donationsForm.get('itemName').value,
       this.donationsForm.get('donatedBy').value,
+      this.donationsForm.get('category').value,
       this.datesGroup.get('donatedDatetime').value,
       null,
       this.donationsForm.get('viewPublic').value,
@@ -214,7 +231,8 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
   private _handleSubmitSuccess(res) {
     this.error = false;
     this.submitting = false;
-    // Redirect to event detail
+    // Redirect to event detail]
+    console.log(res);
     this.router.navigate(['/donations', res._id]);
   }
 

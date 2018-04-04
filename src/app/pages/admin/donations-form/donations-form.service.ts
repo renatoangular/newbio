@@ -7,6 +7,7 @@ export class DonationsFormService {
   formErrors = {
     itemName: '',
     donatedBy: '',
+    category: '',
     viewPublic: '',
     description: '',
     datesGroup: {
@@ -37,6 +38,9 @@ export class DonationsFormService {
         required: `Donated By is <strong>required</strong>.`,
         minlength: `Location must be ${this.textMin} characters or more.`,
         maxlength: `Location must be ${this.locMax} characters or less.`
+      },
+      category: {
+        required: `category By is <strong>required</strong>.`
       },
       donatedDatetime: {
         required: `Donated date is <strong>required</strong>.`,

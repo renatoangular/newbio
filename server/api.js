@@ -183,12 +183,14 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     if (err) {
       return res.status(500).send({message: err.message});
     }
-    if (existingEvent) {
-      return res.status(409).send({message: 'You have already created an item with this name, location, and start date/time.'});
-    }
+  // if (existingEvent) {
+    //  return res.status(409).send({message: 'You have already created an item with this name, location, and start date/time.'});
+   // }
+   
     const donation = new Donation({
       itemName: req.body.itemName,
       donatedBy: req.body.donatedBy,
+      category:  req.body.category,
       donatedDatetime: req.body.donatedDatetime,
       description: req.body.description,
       viewPublic: req.body.viewPublic

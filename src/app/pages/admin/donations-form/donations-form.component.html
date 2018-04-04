@@ -23,12 +23,30 @@
       type="text"
       class="form-control"
       formControlName="donatedBy"
-      [maxlength]="df.locMax">
+      [maxlength]="df.locMax"
+      value="test">
+      
     <div
       *ngIf="formErrors.datesGroup.donatedBy"
       class="small text-danger formErrors"
       [innerHTML]="formErrors.datesGroup.donatedBy">
     </div>
+  </div>
+
+  <div class="form-group">
+    <label for="category">Category</label>
+
+      <select id="category" 
+        name="category" 
+        (change)="onSelect($event.target.value)" 
+        id="category"
+         class="form-control"
+         >
+         
+         <option *ngFor="let country of countries" value={{country.name}}>{{country.name}}</option>
+       </select>
+    <div>
+          </div>
   </div>
 
   <div
