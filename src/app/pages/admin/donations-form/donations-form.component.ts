@@ -9,7 +9,7 @@ import { dateValidator } from './../../../core/forms/date.validator';
 import { dateRangeValidator } from './../../../core/forms/date-range.validator';
 import { DATE_REGEX, TIME_REGEX, stringsToDate } from './../../../core/forms/formUtils.factory';
 import { DonationsFormService } from './donations-form.service';
-import { Country } from './Country';
+import { Country } from './country';
 
 @Component({
   selector: 'app-donations-form',
