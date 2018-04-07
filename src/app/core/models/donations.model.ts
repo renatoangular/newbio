@@ -2,8 +2,10 @@ class DonationsModel {
     constructor(
     public itemName: string,
     public donatedBy: string,
-    public category: string,
-    public donatedDatetime: string,
+    public quantity: string,
+    public MT: string,
+    public category: String,
+    public donatedDatetime: String,
     public description: string,
     public viewPublic: Boolean,
     public _id?: string, // _id is present if editing or returning from DB
@@ -13,11 +15,13 @@ class DonationsModel {
 
 class FormDonationsModel {
   constructor(
-    public itemName: string,
-    public donatedBy: string,
-    public category: string,
-    public donatedDatetime: string,
-    public description: string,
+    public itemName: String,
+    public donatedBy: String,
+    public quantity: string,
+    public MT: string,
+    public category: String,
+    public donatedDatetime: String,
+    public description: String,
     public viewPublic: Boolean
   ) { }
 }

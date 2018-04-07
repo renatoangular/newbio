@@ -245,6 +245,8 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
   Donation.findOne({
     itemName: req.body.itemName,
     donatedBy: req.body.donatedBy,
+    quantity: req.body.quantity,
+    MT: req.body.MT,
     category:  req.body.category,
     donatedDatetime: req.body.donatedDatetime}, (err, existingEvent) => {
     if (err) {
@@ -257,6 +259,8 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     const donation = new Donation({
       itemName: req.body.itemName,
       donatedBy: req.body.donatedBy,
+      quantity: req.body.quantity,
+      MT: req.body.quantity,
       category:  req.body.category,
       donatedDatetime: req.body.donatedDatetime,
       description: req.body.description,
@@ -309,6 +313,8 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     }
     donation.itemName = req.body.itemName;
     donation.donatedBy = req.body.donatedBy;
+    donation.quantity = req.body.quantity,
+    donation.MT = req.body.quantity,
     donation.category = req.body.category;
     donation.donatedDatetime = req.body.donatedDatetime;
     donation.description = req.body.description;

@@ -65,7 +65,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     if (!this.isEdit) {
       // If creating a new event, create new
       // FormEventModel with default null data
-      return new FormDonationsModel(null, null, null, null, null, null);
+      return new FormDonationsModel(null, null, null, null, null, null, null, null);
     } else {
       // If editing existing event, create new
       // FormEventModel from existing data
@@ -77,6 +77,8 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
       return new FormDonationsModel(
         this.donation.itemName,
         this.donation.donatedBy,
+        this.donation.MT,
+        this.donation.quantity,
         this.donation.category,
         this.datePipe.transform(this.donation.donatedDatetime, _shortDate),
         this.donation.description,
@@ -101,6 +103,16 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         Validators.maxLength(this.df.titleMax)
       ]],
       donatedBy: [this.formDonations.donatedBy, [
+        Validators.required,
+        Validators.minLength(this.df.textMin),
+        Validators.maxLength(this.df.locMax)
+      ]],
+      MT: [this.formDonations.MT, [
+        Validators.required,
+        Validators.minLength(this.df.textMin),
+        Validators.maxLength(this.df.locMax)
+      ]],
+      quantity: [this.formDonations.quantity, [
         Validators.required,
         Validators.minLength(this.df.textMin),
         Validators.maxLength(this.df.locMax)
@@ -194,6 +206,8 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     return new DonationsModel(
       this.donationsForm.get('itemName').value,
       this.donationsForm.get('donatedBy').value,
+      this.donationsForm.get('MT').value,
+      this.donationsForm.get('quantity').value,
       this.donationsForm.get('category').value,
       this.datesGroup.get('donatedDatetime').value,
       this.donationsForm.get('description').value,

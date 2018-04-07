@@ -21,14 +21,14 @@
               *ngIf="auth.loggedIn && auth.isAdmin"
               routerLink="/admin"
               routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }">Admin</a>
+              [routerLinkActiveOptions]="{ exact: true }">Admin Events</a>
           </li>
           <li>
             <a
               *ngIf="auth.loggedIn && auth.isAdmin"
-              routerLink="/donations"
+              routerLink="/donadmin"
               routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }">donations</a>
+              [routerLinkActiveOptions]="{ exact: true }">Admin donations</a>
           </li>
 
       <li>

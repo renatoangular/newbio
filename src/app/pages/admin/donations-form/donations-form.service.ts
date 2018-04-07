@@ -39,6 +39,18 @@ export class DonationsFormService {
         minlength: `Location must be ${this.textMin} characters or more.`,
         maxlength: `Location must be ${this.locMax} characters or less.`
       },
+      quantity: {
+        required: `Quantity is <strong>required</strong>.`,
+        minlength: `Quantity must be ${this.textMin} characters or more.`,
+        maxlength: `Quantity must be ${this.locMax} characters or less.`
+      },
+
+      MT: {
+        required: `Measurement Type is <strong>required</strong>.`,
+        minlength: ` must be ${this.textMin} characters or more.`,
+        maxlength: ` must be ${this.locMax} characters or less.`
+      },
+
       category: {
         required: `category By is <strong>required</strong>.`
       },

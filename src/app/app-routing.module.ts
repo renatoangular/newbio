@@ -8,7 +8,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { CallbackComponent } from './pages/callback/callback.component';
 import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
 import { DonComponent } from './pages/admin/don.component';
-import { DonationsComponent} from './pages/donations/donations.component'
+import { EventComponent} from './pages/donations/event.component'
 
 const routes: Routes = [
   {
@@ -28,7 +28,7 @@ const routes: Routes = [
   },
   {
     path: 'donations/:id',
-    component: DonationsComponent,
+    loadChildren: './pages/donations/event.module#EventModule',
     canActivate: [
       AuthGuard
     ]
@@ -51,7 +51,7 @@ const routes: Routes = [
   },
 
   {
-    path: 'donations',
+    path: 'donadmin',
     component: DonComponent,
     canActivate: [
       AuthGuard,

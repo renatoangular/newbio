@@ -1,0 +1,37 @@
+<div class="card-block">
+  <h2 class="card-title text-center">Item Details</h2>
+</div>
+
+<ul class="list-group list-group-flush">
+  <li class="list-group-item">
+    <strong>Donated Date:</strong>{{event.donatedDatetime}}
+  </li>
+  <li class="list-group-item">
+    <strong>Category:</strong>{{event.category}} 
+  </li>
+  <li class="list-group-item">
+    <strong>Public Item:</strong>{{event.viewPublic}}   
+  </li>
+  <li class="list-group-item">
+    <strong>Donated By:</strong>{{event.donatedBy}}
+   </li>
+   <li class="list-group-item">
+    <strong>Measurement Type:</strong>{{event.MT}}
+   </li>
+   <li class="list-group-item">
+    <strong>Quantity:</strong>{{event.quantity}}
+   </li>
+  <li class="list-group-item">
+    <strong>Item Description:</strong>{{event.details}}  
+  </li>
+
+</ul>
+
+<p
+  *ngIf="event.description"
+  class="card-block lead"
+  [innerHTML]="event.description"></p>
+
+<div *ngIf="auth.isAdmin" class="card-footer text-right small">
+  <a [routerLink]="['/admin/event/update', event._id]">Edit</a>
+</div>

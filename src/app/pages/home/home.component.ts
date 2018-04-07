@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs/Subscription';
 import { EventModel } from './../../core/models/event.model';
 import { AuthService } from './../../auth/auth.service';
 import { DonationsModel } from '../../core/models/donations.model';
-import { DonationsComponent } from '../donations/donations.component';
 
 @Component({
   selector: 'app-home',
