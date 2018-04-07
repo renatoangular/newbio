@@ -3,11 +3,10 @@ class DonationsModel {
     public itemName: string,
     public donatedBy: string,
     public category: string,
-    public donatedDatetime: Date,
-    public checkedOutDatetime: Date,
-    public viewPublic: boolean,
-    public description?: string,
-    public _id?: string // _id is present if editing or returning from DB
+    public donatedDatetime: string,
+    public description: string,
+    public viewPublic: Boolean,
+    public _id?: string, // _id is present if editing or returning from DB
   ) { }
 }
 
@@ -18,9 +17,8 @@ class FormDonationsModel {
     public donatedBy: string,
     public category: string,
     public donatedDatetime: string,
-    public checkedOutDatetime: string,
-    public viewPublic: boolean,
-    public description?: string
+    public description: string,
+    public viewPublic: Boolean
   ) { }
 }
 

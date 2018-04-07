@@ -7,6 +7,8 @@ import { AdminGuard } from './auth/admin.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { CallbackComponent } from './pages/callback/callback.component';
 import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
+import { DonComponent } from './pages/admin/don.component';
+import { DonationsComponent} from './pages/donations/donations.component'
 
 const routes: Routes = [
   {
@@ -25,6 +27,14 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'donations/:id',
+    component: DonationsComponent,
+    canActivate: [
+      AuthGuard
+    ]
+  },
+
+  {
     path: 'my-rsvps',
     component: MyRsvpsComponent,
     canActivate: [
@@ -34,6 +44,15 @@ const routes: Routes = [
   {
     path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
+    canActivate: [
+      AuthGuard,
+      AdminGuard
+    ]
+  },
+
+  {
+    path: 'donations',
+    component: DonComponent,
     canActivate: [
       AuthGuard,
       AdminGuard

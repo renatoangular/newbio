@@ -41,7 +41,7 @@
           *ngFor="let event of fs.orderByDate(filteredEvents, 'startDatetime')"
           class="list-group-item list-group-item-action flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
-            <a [routerLink]="['/event', event._id]">
+            <a [routerLink]="['/event/', event._id]">
               <h5 class="mb-1" [innerHTML]="event.title"></h5>
             </a>
             <div class="event-icons">

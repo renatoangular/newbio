@@ -6,6 +6,8 @@ import { FilterSortService } from './../../core/filter-sort.service';
 import { Subscription } from 'rxjs/Subscription';
 import { EventModel } from './../../core/models/event.model';
 import { AuthService } from './../../auth/auth.service';
+import { DonationsModel } from '../../core/models/donations.model';
+import { DonationsComponent } from '../donations/donations.component';
 
 @Component({
   selector: 'app-home',
@@ -13,25 +15,38 @@ import { AuthService } from './../../auth/auth.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  pageTitle = 'Events';
+  pageTitle = 'Open House Events';
   eventListSub: Subscription;
+  donationsListSub: Subscription;
+
   eventList: EventModel[];
+  donationsList: DonationsModel[];
+
   filteredEvents: EventModel[];
+  filteredDonations: DonationsModel[];
+
   loading: boolean;
+  loading1: boolean;
+
   error: boolean;
+  error1: boolean;
+
   query: '';
+  query1: '';
 
   constructor(
     private title: Title,
     public utils: UtilsService,
     private api: ApiService,
     public auth: AuthService,
-    public fs: FilterSortService) { }
+    public fs: FilterSortService,
+    public fs1: FilterSortService) { }
 
   ngOnInit() {
     this.title.setTitle(this.pageTitle);
+    this._getDonationsList();
     this._getEventList();
-    console.log(this.auth.userProfile);
+
   }
 
   private _getEventList() {
@@ -53,8 +68,31 @@ export class HomeComponent implements OnInit, OnDestroy {
       );
   }
 
+  private _getDonationsList() {
+    this.loading = true;
+    // Get future, public events
+    this.donationsListSub = this.api
+      .getDonations$()
+      .subscribe(
+        res => {
+          this.donationsList = res;
+          this.filteredDonations = res;
+          this.loading = false;
+        },
+        err => {
+          console.log(err);
+          this.loading = false;
+          this.error = true;
+        }
+      );
+  }
+
   searchEvents() {
     this.filteredEvents = this.fs.search(this.eventList, this.query, '_id', 'mediumDate');
+  }
+
+  searchDonations() {
+    this.filteredDonations = this.fs.search(this.donationsList, this.query,  '_id', 'donatedDatetime');
   }
 
   resetQuery() {
@@ -68,6 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.eventListSub.unsubscribe();
+    this.donationsListSub.unsubscribe();
   }
 
 }

@@ -6,7 +6,7 @@
     <ng-template [ngIf]="eventList.length">
       <!-- Search events -->
       <section class="search input-group mb-3">
-        <label class="input-group-addon" for="search">Search</label>
+        <label class="input-group-addon" for="search">Search Events</label>
         <input
           id="search"
           type="text"
@@ -48,8 +48,70 @@
 
   <!-- Error loading events -->
   <p *ngIf="error" class="alert alert-danger">
-    <strong>Oops!</strong> There was an error retrieving event data.
-   
+    <strong>Oops!</strong> There was an error retrieving event data.   
   </p>
 
 </ng-template>
+
+<h1 class="text-center">Available Items</h1>
+<app-loading *ngIf="loading"></app-loading>
+  <!-- donations -->
+<ng-template [ngIf]="utils.isLoaded(loading)">
+  <ng-template [ngIf]="donationsList">
+    <ng-template [ngIf]="donationsList.length">
+      <!-- Search donations -->
+      <section class="search input-group mb-3">
+        <label class="input-group-addon" for="search">Search Items</label>
+        <input
+          id="search1"
+          type="text"
+          class="form-control"
+          [(ngModel)]="query"
+          (keyup)="searchDonations()" />
+        <span class="input-group-btn">
+          <button
+            class="btn btn-danger"
+            (click)="resetQuery()"
+            [disabled]="!query">&times;</button>
+        </span>
+      </section>
+
+      <!-- No search results -->
+      <p *ngIf="fs.noSearchResults(filteredDonations, query)" class="alert alert-warning">
+        No events found for <em class="text-danger">{{query}}</em>, sorry!
+      </p>
+
+      <!-- Events listing -->
+      <section class="list-group">
+        <a
+          *ngFor="let event of filteredDonations"
+          [routerLink]="['/donations', event._id]"
+          class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1" [innerHTML]="event.itemName"></h5>
+            <small>{{utils.eventDates(event.donatedDatetime, event.donatedDatetime)}}</small>
+          </div>
+        </a>
+      </section>
+    </ng-template>
+
+    <!-- No upcoming public events available -->
+
+    
+    <p *ngIf="!donationsList.length" class="alert alert-info">
+      No upcoming public events available.
+    </p>
+  </ng-template>
+
+  <!-- Error loading events -->
+  <p *ngIf="error" class="alert alert-danger">
+    <strong>Oops!</strong> There was an error retrieving event data.   
+  </p>
+
+</ng-template>
+
+
+
+
+
+

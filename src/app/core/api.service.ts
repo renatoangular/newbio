@@ -7,6 +7,7 @@ import 'rxjs/add/observable/throw';
 import { ENV } from './env.config';
 import { EventModel } from './models/event.model';
 import { RsvpModel } from './models/rsvp.model';
+import { DcommentModel } from './models/dcomment.model';
 import { RequestModel } from './models/request.model';
 import { DonationsModel } from './models/donations.model';
 
@@ -30,6 +31,13 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // GET list of donations
+    getDonations$(): Observable<DonationsModel[]> {
+      return this.http
+        .get(`${ENV.BASE_API}donations`)
+        .catch(this._handleError);
+    }
+
   // GET all events - private and public (admin only)
   getAdminEvents$(): Observable<EventModel[]> {
     return this.http
@@ -38,6 +46,15 @@ export class ApiService {
       })
       .catch(this._handleError);
   }
+
+    // GET all donatiions - private and public (admin only)
+    getAdminDonations$(): Observable<DonationsModel[]> {
+      return this.http
+        .get(`${ENV.BASE_API}donations/admin`, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
 
   // GET an event by ID (login required)
   getEventById$(id: string): Observable<EventModel> {
@@ -48,7 +65,7 @@ export class ApiService {
       .catch(this._handleError);
   }
 
-    // GET an event by ID (login required)
+    // GET an donation by ID (login required)
     getDonationsById$(id: string): Observable<DonationsModel> {
       return this.http
         .get(`${ENV.BASE_API}donations/${id}`, {
@@ -65,6 +82,16 @@ export class ApiService {
       })
       .catch(this._handleError);
   }
+
+    // GET dcomment by event ID (login required)
+    getDcommentsByEventId$(eventId: string): Observable<DcommentModel[]> {
+      return this.http
+        .get(`${ENV.BASE_API}event/${eventId}/dcomments`, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
+
   // GET RSVPs by event ID (login required)
   getRequestsByDonationsId$(DonationsId: string): Observable<RequestModel[]> {
     return this.http
@@ -146,6 +173,15 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // POST new comment on item(login required)
+    postDcomment$(dcomment: DcommentModel): Observable<DcommentModel> {
+      return this.http
+        .post(`${ENV.BASE_API}dcomment/new`, dcomment, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
+
     // POST new request (login required)
     postRequest$(request1: RequestModel): Observable<RequestModel> {
       return this.http
@@ -164,6 +200,15 @@ export class ApiService {
       })
       .catch(this._handleError);
   }
+
+    // PUT existing dcomment (login required)
+    editDcomment$(id: string, dcomment: DcommentModel): Observable<DcommentModel> {
+      return this.http
+        .put(`${ENV.BASE_API}dcomment/${id}`, dcomment, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
 
     // PUT existing RSVP (login required)
     editRequest$(id: string, request1: RequestModel): Observable<RequestModel> {

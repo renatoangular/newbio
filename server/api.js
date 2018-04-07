@@ -8,6 +8,7 @@ const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const Event = require('./models/Event');
 const Rsvp = require('./models/Rsvp');
+const Dcomment = require('./models/Dcomment');
 const Donation = require('./models/Donations')
 
 /*
@@ -47,7 +48,7 @@ module.exports = function(app, config) {
  */
 
   const _eventListProjection = 'title startDatetime endDatetime viewPublic';
-
+  const _donationsListProjection = 'itemName viewPublic donatedDatetime';
   // GET API root
   app.get('/api/', (req, res) => {
     res.send('API works');
@@ -71,6 +72,25 @@ module.exports = function(app, config) {
     );
   });
 
+    // GET list of items public items
+    app.get('/api/donations', (req, res) => {
+      Donation.find({viewPublic: true},
+        _donationsListProjection, (err, donations) => {
+          let donationsArr = [];
+          if (err) {
+            return res.status(500).send({message: err.message});
+          }
+          if (donations) {
+            donations.forEach(donation => {
+              donationsArr.push(donation);
+            });
+          }
+          res.send(donationsArr);
+        }
+      );
+    });
+
+
   // GET list of all events, public and private (admin only)
   app.get('/api/events/admin', jwtCheck, adminCheck, (req, res) => {
     Event.find({}, _eventListProjection, (err, events) => {
@@ -88,6 +108,23 @@ module.exports = function(app, config) {
     );
   });
 
+    // GET list of all donations, public and private (admin only)
+    app.get('/api/donations/admin', jwtCheck, adminCheck, (req, res) => {
+      Donation.find({}, _donationsListProjection, (err, donations) => {
+          let donationsArr = [];
+          if (err) {
+            return res.status(500).send({message: err.message});
+          }
+          if (donations) {
+            donations.forEach(donation => {
+              donationsArr.push(donation);
+            });
+          }
+          res.send(donationsArr);
+        }
+      );
+    });
+
   // GET event by event ID
   app.get('/api/event/:id', jwtCheck, (req, res) => {
     Event.findById(req.params.id, (err, event) => {
@@ -100,6 +137,19 @@ module.exports = function(app, config) {
       res.send(event);
     });
   });
+
+    // GET donatiion by event ID
+    app.get('/api/donations/:id', jwtCheck, (req, res) => {
+      Donation.findById(req.params.id, (err, event) => {
+        if (err) {
+          return res.status(500).send({message: err.message});
+        }
+        if (!event) {
+          return res.status(400).send({message: 'item not found.'});
+        }
+        res.send(event);
+      });
+    });
 
   // GET RSVPs by event ID
   app.get('/api/event/:eventId/rsvps', jwtCheck, (req, res) => {
@@ -116,6 +166,22 @@ module.exports = function(app, config) {
       res.send(rsvpsArr);
     });
   });
+
+    // GET dcomments by event ID
+    app.get('/api/event/:eventId/dcomments', jwtCheck, (req, res) => {
+      Dcomment.find({eventId: req.params.eventId}, (err, dcomments) => {
+        let dcommentsArr = [];
+        if (err) {
+          return res.status(500).send({message: err.message});
+        }
+        if (dcomments) {
+          dcomments.forEach(dcomment => {
+            dcommentsArr.push(dcomment);
+          });
+        }
+        res.send(dcommentsArr);
+      });
+    });
 
   // GET list of upcoming events user has RSVPed to
   app.get('/api/events/:userId', jwtCheck, (req, res) => {
@@ -179,6 +245,7 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
   Donation.findOne({
     itemName: req.body.itemName,
     donatedBy: req.body.donatedBy,
+    category:  req.body.category,
     donatedDatetime: req.body.donatedDatetime}, (err, existingEvent) => {
     if (err) {
       return res.status(500).send({message: err.message});
@@ -229,6 +296,35 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     });
   });
 
+
+
+ // PUT (edit) an existing donation
+ app.put('/api/donations/:id', jwtCheck, adminCheck, (req, res) => {
+  Donation.findById(req.params.id, (err, donation) => {
+    if (err) {
+      return res.status(500).send({message: err.message});
+    }
+    if (!donation) {
+      return res.status(400).send({message: 'donation not found.'});
+    }
+    donation.itemName = req.body.itemName;
+    donation.donatedBy = req.body.donatedBy;
+    donation.category = req.body.category;
+    donation.donatedDatetime = req.body.donatedDatetime;
+    donation.description = req.body.description;
+    donation.viewPublic = req.body.viewPublic;
+
+    donation.save(err => {
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+      res.send(donation);
+    });
+  });
+});
+
+
+
   // DELETE an event and all associated RSVPs
   app.delete('/api/event/:id', jwtCheck, adminCheck, (req, res) => {
     Event.findById(req.params.id, (err, event) => {
@@ -254,43 +350,95 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     });
   });
 
-  // POST a new RSVP
-  app.post('/api/rsvp/new', jwtCheck, (req, res) => {
-    Rsvp.findOne({eventId: req.body.eventId, userId: req.body.userId}, (err, existingRsvp) => {
+   // DELETE an event and all associated RSVPs
+   app.delete('/api/donations/:id', jwtCheck, adminCheck, (req, res) => {
+    Donation.findById(req.params.id, (err, event) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
-      if (existingRsvp) {
-        return res.status(409).send({message: 'You have already RSVPed to this event.'});
+      if (!event) {
+        return res.status(400).send({message: 'Event not found.'});
       }
-      const rsvp = new Rsvp({
-        userId: req.body.userId,
-        name: req.body.name,
-        eventId: req.body.eventId,
-        attending: req.body.attending,
-        guests: req.body.guests,
-        comments: req.body.comments
-      });
-      rsvp.save((err) => {
-        if (err) {
-          return res.status(500).send({message: err.message});
+      Rsvp.find({eventId: req.params.id}, (err, rsvps) => {
+        if (rsvps) {
+          rsvps.forEach(rsvp => {
+            rsvp.remove();
+          });
         }
-        res.send(rsvp);
+        event.remove(err => {
+          if (err) {
+            return res.status(500).send({message: err.message});
+          }
+          res.status(200).send({message: 'Event and RSVPs successfully deleted.'});
+        });
       });
     });
   });
 
-  // PUT (edit) an existing RSVP
-  app.put('/api/rsvp/:id', jwtCheck, (req, res) => {
+  // POST a new dcomment
+  app.post('/api/dcomment/new', jwtCheck, (req, res) => {
+    Dcomment.findOne({eventId: req.body.eventId, userId: req.body.userId}, (err, existingRsvp) => {
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+      if (existingRsvp) {
+        return res.status(409).send({message: 'You have already requested to this item.'});
+      }
+      const dcomment = new Dcomment({
+        userId: req.body.userId,
+        name: req.body.name,
+        eventId: req.body.eventId,
+        wishList: req.body.wishList,
+        numberWished: req.body.numberWished,
+        comments: req.body.comments
+                
+      });
+      dcomment.save((err) => {
+        if (err) {
+          return res.status(500).send({message: err.message});
+        }
+        res.send(dcomment);
+      });
+    });
+  });
+
+// POST a new RSVP
+app.post('/api/rsvp/new', jwtCheck, (req, res) => {
+  Rsvp.findOne({eventId: req.body.eventId, userId: req.body.userId}, (err, existingRsvp) => {
+    if (err) {
+      return res.status(500).send({message: err.message});
+    }
+    if (existingRsvp) {
+      return res.status(409).send({message: 'You have already RSVPed to this event.'});
+    }
+    const rsvp = new Rsvp({
+      userId: req.body.userId,
+      name: req.body.name,
+      eventId: req.body.eventId,
+      attending: req.body.attending,
+      guests: req.body.guests,
+      comments: req.body.comments
+    });
+    rsvp.save((err) => {
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+      res.send(rsvp);
+    });
+  });
+});
+
+   // PUT (edit) an existing dcomment
+   app.put('/api/rsvp/:id', jwtCheck, (req, res) => {
     Rsvp.findById(req.params.id, (err, rsvp) => {
       if (err) {
         return res.status(500).send({message: err.message});
       }
       if (!rsvp) {
-        return res.status(400).send({message: 'RSVP not found.'});
+        return res.status(400).send({message: 'wishlist not found.'});
       }
       if (rsvp.userId !== req.user.sub) {
-        return res.status(401).send({message: 'You cannot edit someone else\'s RSVP.'});
+        return res.status(401).send({message: 'You cannot edit someone else\'s wishlist.'});
       }
       rsvp.name = req.body.name;
       rsvp.attending = req.body.attending;
@@ -306,4 +454,31 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     });
   });
 
+  // PUT (edit) an existing dcomment
+  app.put('/api/dcomment/:id', jwtCheck, (req, res) => {
+    Dcomment.findById(req.params.id, (err, dcomment) => {
+      if (err) {
+        return res.status(500).send({message: err.message});
+      }
+      if (!dcomment) {
+        return res.status(400).send({message: err.message});
+      }
+      if (dcomment.userId !== req.user.sub) {
+        return res.status(401).send({message: 'You cannot edit someone else\'s wishlist.'});
+      }
+      dcomment.name = req.body.name;
+      dcomment.wishList = req.body.wishList;
+      dcomment.numberWished = req.body.numberWished;
+      dcomment.comments = req.body.comments;
+      dcomment.save(err => {
+        if (err) {
+          return res.status(500).send({message: err.message});
+        }
+        res.send(dcomment);
+      });
+    });
+  });
+
 };
+
+

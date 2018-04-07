@@ -1,0 +1,107 @@
+<div class="card-block">
+  <h2 class="card-title text-center">RSVP</h2>
+  <app-loading *ngIf="loading"></app-loading>
+</div>
+
+<!-- Event is over -->
+<p *ngIf="eventPast" class="card-block lead">
+  You cannot RSVP to an event that has already ended.
+</p>
+
+<ng-template [ngIf]="utils.isLoaded(loading)">
+  <ng-template [ngIf]="!eventPast && dcomments">
+
+    <!-- User has RSVPed -->
+    <ng-template [ngIf]="userDcomment">
+      <p class="card-block lead">You responded to this event with the following information:</p>
+
+      <ul *ngIf="!showEditForm" class="list-group list-group-flush">
+        <li class="list-group-item">
+          <strong>Name:</strong>{{userDcomment.name}}
+        </li>
+        <li class="list-group-item">
+          <strong>wishList:</strong>{{utils.booleanToText(userDcomment.wishList)}}
+        </li>
+        <li *ngIf="userDcomment.wishList && userDcomment.numberWished" class="list-group-item">
+          <strong>Additional Guests:</strong>{{userDcomment.numberWished}}
+        </li>
+        <li *ngIf="userDcomment.comments" class="list-group-item">
+          <strong>Comments:</strong><span [innerHTML]="userDcomment.comments"></span>
+        </li>
+      </ul>
+
+      <div class="card-block">
+        <button
+          class="btn btn-info"
+          [ngClass]="{'btn-info': !showEditForm, 'btn-warning': showEditForm}"
+          (click)="toggleEditForm()">{{editBtnText}}</button>
+
+        <app-dcomment-form
+          *ngIf="showEditForm"
+          [eventId]="eventId"
+          [dcomment]="userDcomment"
+          (submitDcomment)="onSubmitDcomment($event)"></app-dcomment-form>
+      </div>
+    </ng-template>
+
+    <!-- No RSVP yet -->
+    <div *ngIf="!userDcomment" class="card-block">
+      <p class="lead">Fill out the form below to request item:</p>
+
+      <app-dcomment-form
+        [eventId]="eventId"
+        (submitDcomment)="onSubmitDcomment($event)"></app-dcomment-form>
+    </div>
+  </ng-template>
+
+  <!-- All RSVPs -->
+  <div class="card-block text-right">
+    <button (click)="toggleShowDcomments()" class="btn btn-link btn-sm">{{showDcommentsText}}</button>
+  </div>
+
+  <section class="allDcomments" *ngIf="showAllDcomments" [@expandCollapse]>
+    <div class="card-block">
+      <h3 class="card-title text-center">All RSVPs</h3>
+      <p *ngIf="!dcomments.length" class="lead">There are currently no RSVPs for this event.</p>
+    </div>
+
+    <ul *ngIf="dcomments.length" class="list-group list-group-flush">
+      <li class="list-group-item list-group-item-success justify-content-between">
+        <strong>wishList</strong>
+        <span class="badge badge-success badge-pill">{{totalwishList}}</span>
+      </li>
+      <li
+        *ngFor="let dcomment of fs.filter(dcomments, 'wishList', true)"
+        class="list-group-item small">
+        {{dcomment.name}} {{utils.showPlusOnes(dcomment.numberWished)}}
+        <p *ngIf="auth.isAdmin && dcomment.comments" class="d-flex w-100">
+          <em [innerHTML]="dcomment.comments"></em>
+        </p>
+      </li>
+      <li class="list-group-item list-group-item-danger justify-content-between">
+        <strong>Not wishList</strong>
+        <span class="badge badge-danger badge-pill">{{fs.filter(dcomments, 'wishList', false).length}}</span>
+      </li>
+      <li
+        *ngFor="let dcomment of fs.filter(dcomments, 'wishList', false)"
+        class="list-group-item small">
+        {{dcomment.name}}
+        <p *ngIf="auth.isAdmin && dcomment.comments" class="d-flex w-100">
+          <em [innerHTML]="dcomment.comments"></em>
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Error loading RSVPs -->
+  <div *ngIf="error" class="card-block">
+    <p class="alert alert-danger">
+      <strong>Oops!</strong> There was an error retrieving RSVPs for this event.
+    </p>
+  </div>
+</ng-template>
+
+<!-- Footer showing # of total wishList guests -->
+<div class="card-footer text-right">
+  <small *ngIf="totalwishList >= 0" class="text-muted">{{utils.displayCount(totalwishList)}} {{footerTense}}</small>
+</div>

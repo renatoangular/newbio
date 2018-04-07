@@ -6,6 +6,7 @@ import { UtilsService } from './../../core/utils.service';
 import { FilterSortService } from './../../core/filter-sort.service';
 import { Subscription } from 'rxjs/Subscription';
 import { EventModel } from './../../core/models/event.model';
+import { DonationsModel } from '../../core/models/donations.model';
 
 @Component({
   selector: 'app-admin',
@@ -16,7 +17,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   pageTitle = 'Admin';
   eventsSub: Subscription;
   eventList: EventModel[];
+  donationsList: DonationsModel[];
   filteredEvents: EventModel[];
+  filteredDonations: DonationsModel[];
   loading: boolean;
   error: boolean;
   query = '';
@@ -54,6 +57,10 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   searchEvents() {
     this.filteredEvents = this.fs.search(this.eventList, this.query, '_id', 'mediumDate');
+  }
+
+  searchDonations() {
+    this.filteredDonations = this.fs.search(this.donationsList, this.query, '_id', 'mediumDate');
   }
 
   resetQuery() {

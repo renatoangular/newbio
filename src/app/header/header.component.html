@@ -23,6 +23,13 @@
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }">Admin</a>
           </li>
+          <li>
+            <a
+              *ngIf="auth.loggedIn && auth.isAdmin"
+              routerLink="/donations"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }">donations</a>
+          </li>
 
       <li>
         <a

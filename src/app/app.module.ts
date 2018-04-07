@@ -10,6 +10,9 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { CallbackComponent } from './pages/callback/callback.component';
 import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
+import { DonationsComponent } from './pages/donations/donations.component';
+import { DonComponent } from './pages/admin/don.component';
+
 
 
 @NgModule({
@@ -17,7 +20,9 @@ import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
     AppComponent,
     HomeComponent,
     CallbackComponent,
-    MyRsvpsComponent
+    MyRsvpsComponent,
+    DonationsComponent,
+    DonComponent
   ],
   imports: [
     BrowserModule,

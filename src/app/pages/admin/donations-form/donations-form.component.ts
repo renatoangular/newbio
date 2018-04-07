@@ -78,10 +78,9 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         this.donation.itemName,
         this.donation.donatedBy,
         this.donation.category,
-        this.datePipe.transform(this.donation.donatedDatetime, '_shortDate'),
-        this.datePipe.transform(this.donation.checkedOutDatetime, '_shortDate'),
-        this.donation.viewPublic,
-        this.donation.description
+        this.datePipe.transform(this.donation.donatedDatetime, _shortDate),
+        this.donation.description,
+        this.donation.viewPublic
       );
     }
   }
@@ -123,11 +122,8 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
           Validators.maxLength(this.df.dateMax),
           Validators.pattern(DATE_REGEX),
           dateValidator()
-        ]],
-        checkedOutDatetime: [this.formDonations.checkedOutDatetime, [
-          Validators.maxLength(this.df.descMax)
         ]]
-      }, {})
+       }, {})
     });
     // Set local property to eventForm datesGroup control
     this.datesGroup = this.donationsForm.get('datesGroup');
@@ -193,16 +189,15 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
   private _getSubmitObj() {
 
     const donatedDatetime = this.datesGroup.get('donatedDatetime').value;
-    const checkedOutDatetime = this.datesGroup.get('checkedOutDatetime').value;
+   // const checkedOutDatetime = this.datesGroup.get('checkedOutDatetime').value;
 
     return new DonationsModel(
       this.donationsForm.get('itemName').value,
       this.donationsForm.get('donatedBy').value,
       this.donationsForm.get('category').value,
       this.datesGroup.get('donatedDatetime').value,
-      null,
-      this.donationsForm.get('viewPublic').value,
       this.donationsForm.get('description').value,
+       this.donationsForm.get('viewPublic').value,
       this.donation ? this.donation._id : null
     );
   }
