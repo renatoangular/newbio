@@ -9,8 +9,7 @@ const jwks = require('jwks-rsa');
 const Event = require('./models/Event');
 const Rsvp = require('./models/Rsvp');
 const Dcomment = require('./models/Dcomment');
-const Donation = require('./models/Donations')
-
+const Donation = require('./models/Donations');
 /*
  |--------------------------------------
  | Authentication Middleware
@@ -56,6 +55,7 @@ module.exports = function(app, config) {
 
   // GET list of public events starting in the future
   app.get('/api/events', (req, res) => {
+    
     Event.find({viewPublic: true, startDatetime: { $gte: new Date() }},
       _eventListProjection, (err, events) => {
         let eventsArr = [];
@@ -213,6 +213,7 @@ module.exports = function(app, config) {
 
   // POST a new event
   app.post('/api/event/new', jwtCheck, adminCheck, (req, res) => {
+  
     Event.findOne({
       title: req.body.title,
       location: req.body.location,
@@ -260,12 +261,13 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
       itemName: req.body.itemName,
       donatedBy: req.body.donatedBy,
       quantity: req.body.quantity,
-      MT: req.body.quantity,
+      MT: req.body.MT,
       category:  req.body.category,
       donatedDatetime: req.body.donatedDatetime,
       description: req.body.description,
       viewPublic: req.body.viewPublic
     });
+    
     donation.save((err) => {
       if (err) {
         return res.status(500).send({message: 'test' +err.message});
@@ -314,7 +316,7 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     donation.itemName = req.body.itemName;
     donation.donatedBy = req.body.donatedBy;
     donation.quantity = req.body.quantity,
-    donation.MT = req.body.quantity,
+    donation.MT = req.body.MT,
     donation.category = req.body.category;
     donation.donatedDatetime = req.body.donatedDatetime;
     donation.description = req.body.description;
@@ -390,6 +392,7 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
       if (existingRsvp) {
         return res.status(409).send({message: 'You have already requested to this item.'});
       }
+
       const dcomment = new Dcomment({
         userId: req.body.userId,
         name: req.body.name,

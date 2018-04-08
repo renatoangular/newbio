@@ -27,7 +27,7 @@ export class DcommentComponent implements OnInit, OnDestroy {
   showEditForm: boolean;
   editBtnText: string;
   showAlldcomments = false;
-  showdcommentsText = 'View All dcomments';
+  showdcommentsText = 'View All Comments';
 
   constructor(
     public auth: AuthService,
@@ -36,7 +36,7 @@ export class DcommentComponent implements OnInit, OnDestroy {
     public fs: FilterSortService) { }
 
   ngOnInit() {
-    this.footerTense = !this.eventPast ? 'plan to attend this event.' : 'attended this event.';
+    this.footerTense = !this.eventPast ? 'request this item' : 'Requested this item.';
     this._getdcomments();
     this.toggleEditForm(false);
   }
@@ -62,12 +62,12 @@ export class DcommentComponent implements OnInit, OnDestroy {
 
   toggleEditForm(setVal?: boolean) {
     this.showEditForm = setVal !== undefined ? setVal : !this.showEditForm;
-    this.editBtnText = this.showEditForm ? 'Cancel Edit' : 'Edit My RSVP';
+    this.editBtnText = this.showEditForm ? 'Cancel Edit' : 'Edit My Request';
   }
 
   toggleShowdcomments() {
     this.showAlldcomments = !this.showAlldcomments;
-    this.showdcommentsText = this.showAlldcomments ? 'Hide dcomments' : 'Show All dcomments';
+    this.showdcommentsText = this.showAlldcomments ? 'Hide Requests' : 'Show All Requests';
   }
 
   onSubmitDcomment(e) {

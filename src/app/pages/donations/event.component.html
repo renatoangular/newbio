@@ -20,19 +20,19 @@
               [queryParams]="{tab: 'details'}"
               [ngClass]="{'active': utils.tabIs(tab, 'details')}">Details</a>
           </li>
-          <li class="nav-item">
+         <!--  <li class="nav-item">
             <a
               class="nav-link"
               [routerLink]="[]"
               [queryParams]="{tab: 'rsvp'}"
               [ngClass]="{'active': utils.tabIs(tab, 'rsvp')}">Requested By</a>
-          </li>
+          </li>   -->
           <li class="nav-item">
             <a
               class="nav-link"
               [routerLink]="[]"
               [queryParams]="{tab: 'dcomment'}"
-              [ngClass]="{'active': utils.tabIs(tab, 'dcomment')}">Comments</a>
+              [ngClass]="{'active': utils.tabIs(tab, 'dcomment')}">Request this Item</a>
           </li>
         </ul>
       </div>
@@ -42,15 +42,15 @@
         *ngIf="utils.tabIs(tab, 'details')"
         [event]="event"></app-event-detail>
 
-      <!-- Event RSVP tab -->
+      <!-- Event RSVP
       <app-rsvp
         *ngIf="utils.tabIs(tab, 'rsvp')"
         [eventId]="event._id"
-        [eventPast]="eventPast"></app-rsvp>
+        [eventPast]="eventPast"></app-rsvp>   tab -->
 
               <!-- Event RSVP tab -->
       <app-dcomment
-      *ngIf="utils.tabIs(tab, 'rsvp')"
+      *ngIf="utils.tabIs(tab, 'dcomment')"
       [eventId]="event._id"
       [eventPast]="eventPast"></app-dcomment>
 

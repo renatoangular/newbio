@@ -74,7 +74,7 @@
       *ngIf="guests.errors && guests.dirty"
       class="col-12 small text-danger formErrors">
       <div [hidden]="!guests.errors.pattern">
-        Additional Guests must be an integer from <strong>0-9</strong>.
+        Additional Items must be an integer from <strong>0-9</strong>.
       </div>
     </div>
   </div>
@@ -96,7 +96,7 @@
     <button
       type="submit"
       class="btn btn-primary"
-      [disabled]="!DcommentForm.form.valid || submitting">Submit Dcomment</button>
+      [disabled]="!DcommentForm.form.valid || submitting">Submit Request</button>
     <app-submitting *ngIf="submitting"></app-submitting>
 
     <!-- API submission error -->

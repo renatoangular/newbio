@@ -2,8 +2,9 @@ class DonationsModel {
     constructor(
     public itemName: string,
     public donatedBy: string,
-    public quantity: string,
     public MT: string,
+    public quantity: string,
+
     public category: String,
     public donatedDatetime: String,
     public description: string,

@@ -1,11 +1,11 @@
 <div class="card-block">
-  <h2 class="card-title text-center">RSVP</h2>
+  <h2 class="card-title text-center">Request</h2>
   <app-loading *ngIf="loading"></app-loading>
 </div>
 
 <!-- Event is over -->
 <p *ngIf="eventPast" class="card-block lead">
-  You cannot RSVP to an event that has already ended.
+  You cannot Request this item, item has already been issued.
 </p>
 
 <ng-template [ngIf]="utils.isLoaded(loading)">
@@ -13,17 +13,17 @@
 
     <!-- User has RSVPed -->
     <ng-template [ngIf]="userDcomment">
-      <p class="card-block lead">You responded to this event with the following information:</p>
+      <p class="card-block lead">You requested this item with the following information:</p>
 
       <ul *ngIf="!showEditForm" class="list-group list-group-flush">
         <li class="list-group-item">
           <strong>Name:</strong>{{userDcomment.name}}
         </li>
         <li class="list-group-item">
-          <strong>wishList:</strong>{{utils.booleanToText(userDcomment.wishList)}}
+          <strong>Request item?</strong>{{utils.booleanToText(userDcomment.wishList)}}
         </li>
         <li *ngIf="userDcomment.wishList && userDcomment.numberWished" class="list-group-item">
-          <strong>Additional Guests:</strong>{{userDcomment.numberWished}}
+          <strong>Quantity:</strong>{{userDcomment.numberWished}}
         </li>
         <li *ngIf="userDcomment.comments" class="list-group-item">
           <strong>Comments:</strong><span [innerHTML]="userDcomment.comments"></span>
@@ -61,8 +61,8 @@
 
   <section class="allDcomments" *ngIf="showAllDcomments" [@expandCollapse]>
     <div class="card-block">
-      <h3 class="card-title text-center">All RSVPs</h3>
-      <p *ngIf="!dcomments.length" class="lead">There are currently no RSVPs for this event.</p>
+      <h3 class="card-title text-center">All Requests</h3>
+      <p *ngIf="!dcomments.length" class="lead">There are currently no Requests for this item.</p>
     </div>
 
     <ul *ngIf="dcomments.length" class="list-group list-group-flush">
@@ -96,7 +96,7 @@
   <!-- Error loading RSVPs -->
   <div *ngIf="error" class="card-block">
     <p class="alert alert-danger">
-      <strong>Oops!</strong> There was an error retrieving RSVPs for this event.
+      <strong>Oops!</strong> There was an error retrieving requests for this item.
     </p>
   </div>
 </ng-template>

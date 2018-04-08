@@ -16,10 +16,10 @@
     <strong>Donated By:</strong>{{event.donatedBy}}
    </li>
    <li class="list-group-item">
-    <strong>Measurement Type:</strong>{{event.MT}}
-   </li>
+    <strong>Measurement Type:</strong>{{event.quantity}}
+  
    <li class="list-group-item">
-    <strong>Quantity:</strong>{{event.quantity}}
+    <strong>Quantity:</strong>{{event.MT}}
    </li>
   <li class="list-group-item">
     <strong>Item Description:</strong>{{event.details}}  
@@ -33,5 +33,5 @@
   [innerHTML]="event.description"></p>
 
 <div *ngIf="auth.isAdmin" class="card-footer text-right small">
-  <a [routerLink]="['/admin/event/update', event._id]">Edit</a>
+  <a [routerLink]="['/admin/donations/update', event._id]">Edit</a>
 </div>

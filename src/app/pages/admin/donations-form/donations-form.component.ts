@@ -58,8 +58,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
   }
 
   onSelect(statusId) {
-    this.selectedCountry = statusId;
-
+    this.selectedCountry.name = statusId;
   }
   private _setFormDonations() {
     if (!this.isEdit) {
@@ -79,7 +78,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         this.donation.donatedBy,
         this.donation.MT,
         this.donation.quantity,
-        this.donation.category,
+        this.selectedCountry.name,
         this.datePipe.transform(this.donation.donatedDatetime, _shortDate),
         this.donation.description,
         this.donation.viewPublic
@@ -113,10 +112,8 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         Validators.maxLength(this.df.locMax)
       ]],
       quantity: [this.formDonations.quantity, [
-        Validators.required,
-        Validators.minLength(this.df.textMin),
-        Validators.maxLength(this.df.locMax)
-      ]],
+        Validators.required
+            ]],
       category: [this.formDonations.category, [
         Validators.required,
         Validators.minLength(this.df.textMin),
@@ -206,9 +203,10 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     return new DonationsModel(
       this.donationsForm.get('itemName').value,
       this.donationsForm.get('donatedBy').value,
-      this.donationsForm.get('MT').value,
       this.donationsForm.get('quantity').value,
-      this.donationsForm.get('category').value,
+      this.donationsForm.get('MT').value,
+      this.selectedCountry.name,
+      // this.donationsForm.get('category').value,
       this.datesGroup.get('donatedDatetime').value,
       this.donationsForm.get('description').value,
        this.donationsForm.get('viewPublic').value,
@@ -242,11 +240,11 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     this.submitting = false;
     // Redirect to event detail]
     console.log(res);
-    this.router.navigate(['/donations', res._id]);
+    this.router.navigate(['/donadmin', res._id]);
   }
 
   private _handleSubmitError(err) {
-    console.log(err);
+    console.log('there was an error submitting the data edited');
     this.submitting = false;
     this.error = true;
   }
