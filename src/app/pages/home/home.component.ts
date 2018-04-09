@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   resetQuery() {
-    this.query = '';
+    this.query = '' ;
     this.filteredEvents = this.eventList;
   }
 

@@ -1,23 +1,23 @@
 <form [formGroup]="donationsForm" (ngSubmit)="onSubmit()">
   <!-- Title -->
-  <div class="dropdown-toggle">
-    <label for="category">Item Name</label>
-
-      <select id="itemName" 
-        name="itemName" 
-        (change)="onSelect($event.target.value)" 
-        id="itemName"
-         class="form-control"
-      >         
-         <option *ngFor="let country of itemsList" value={{country.itemName}}>{{country.itemName}}</option>
-       </select>
-       <div>
-     </div>
+  <div class="form-group">
+    <label for="title">Item Name</label>
+    <input
+      id="itemName"
+      type="text"
+      class="form-control"
+      formControlName="itemName"
+      [maxlength]="df.titleMax">
+    <div
+      *ngIf="formErrors.itemName"
+      class="small text-danger formErrors"
+      [innerHTML]="formErrors.itemName">
+    </div>
   </div>
-      
+
   <!-- Location -->
   <div class="form-group">
-    <label for="donatedBy">Donated By</label>
+    <label for="donatedBy">Serial Number:</label>
     <input
       id="donatedBy"
       type="text"
@@ -29,7 +29,7 @@
 
     <!-- Location -->
     <div class="form-group">
-      <label for="quantity">Quantity</label>
+      <label for="quantity">Make</label>
       <input
         id="quantity"
         type="text"
@@ -41,7 +41,7 @@
 
           <!-- MT -->
     <div class="form-group">
-      <label for="quantity">Measurement Type</label>
+      <label for="MT">Model</label>
       <input
         id="MT"
         type="text"
@@ -60,10 +60,10 @@
         id="category"
          class="form-control"
       >         
-         <option *ngFor="let country of itemsList" value={{country.itemName}}>{{country.itemName}}</option>
+         <option *ngFor="let country of countries" value={{country.name}}>{{country.name}}</option>
        </select>
-       <div>
-     </div>
+    <div>
+          </div>
   </div>
 
   <div
@@ -72,7 +72,7 @@
     <div class="row">
       <!-- Start date -->
       <div class="form-group col-sm-12 col-md-6">
-        <label for="donatedDatetime">Donated Date</label>
+        <label for="donatedDatetime">Manufacture Date</label>
         <input
           id="donatedDatetime"
           type="text"
@@ -86,7 +86,7 @@
 
   <!-- View Public -->
   <div class="form-group">
-    <label class="label-inline-group">List item publicly?</label>
+    <label class="label-inline-group">Hazmat</label>
     <div class="form-check form-check-inline">
       <label class="form-check-label">
         <input

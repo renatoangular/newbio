@@ -10,70 +10,59 @@ import { dateRangeValidator } from './../../../core/forms/date-range.validator';
 import { DATE_REGEX, TIME_REGEX, stringsToDate } from './../../../core/forms/formUtils.factory';
 import { DonationsFormService } from './donations-form.service';
 import { Country } from './country';
-import { ItemModel } from '../../../core/models/item.model';
-
-import { FilterSortService } from './../../../core/filter-sort.service';
-import { FlashMessagesService } from 'angular2-flash-messages';
+import { ItemModel, FormItemModel } from '../../../core/models/item.model';
 
 @Component({
-  selector: 'app-donations-form',
-  templateUrl: './donations-form.component.html',
-  styleUrls: ['./donations-form.component.scss'],
+  selector: 'app-donations-form1',
+  templateUrl: './donations-form1.component.html',
+  styleUrls: ['./donations-form1.component.scss'],
   providers: [ DonationsFormService ]
 })
-
-export class DonationsFormComponent implements OnInit, OnDestroy {
+export class DonationsForm1Component implements OnInit, OnDestroy {
   @Input() donation: DonationsModel;
   isEdit: boolean;
-  itemsList: ItemModel[];
-
-  filteredEvents: ItemModel[];
-
-  query: '';
+  countries = [
+    new Country(1, 'Consumables'),
+    new Country(2, 'Hardware'),
+    new Country(3, 'Equipment'),
+    new Country(4, 'Other')
+  ];
   // FormBuilder form
   donationsForm: FormGroup;
   datesGroup: AbstractControl;
   // Model storing initial form values
-  formDonations: FormDonationsModel;
+  formDonations: FormItemModel;
   // Form validation and disabled logic
   formErrors: any;
   formChangeSub: Subscription;
   // Form submission
-  submitDonationsObj: DonationsModel;
+  submitDonationsObj: ItemModel;
   submitDonationsSub: Subscription;
-
-  itemObject: ItemModel;
-  getItemsSub: Subscription;
-
   error: boolean;
   submitting: boolean;
   submitBtnText: string;
-  selectedCountry: string;
-  flashMessage: FlashMessagesService;
+  selectedCountry: Country = new Country(1, 'Miscellaneous');
+
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
     private datePipe: DatePipe,
     public df: DonationsFormService,
-    private router: Router,
-    public fs: FilterSortService) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.formErrors = this.df.formErrors;
     this.isEdit = !!this.donation;
-    this.submitBtnText = this.isEdit ? 'Update Donation' : 'Create Donation';
+    this.submitBtnText = this.isEdit ? 'Update Item' : 'Create Item';
     // Set initial form data
     this.formDonations = this._setFormDonations();
     // Use FormBuilder to construct the form
     this._buildForm();
-    this.getItems();
   }
 
   onSelect(statusId) {
-    this.selectedCountry = statusId;
+    this.selectedCountry.name = statusId;
   }
-
-
   private _setFormDonations() {
     if (!this.isEdit) {
       // If creating a new event, create new
@@ -92,7 +81,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
         this.donation.donatedBy,
         this.donation.MT,
         this.donation.quantity,
-        this.selectedCountry,
+        this.selectedCountry.name,
         this.datePipe.transform(this.donation.donatedDatetime, _shortDate),
         this.donation.description,
         this.donation.viewPublic
@@ -208,17 +197,6 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
       }
     }
   }
-  resetQuery() {
-    this.query = '';
-    this.filteredEvents = this.itemsList;
-  }
-  get noSearchResults(): boolean {
-    return !!(!this.filteredEvents.length && this.query);
-  }
-
-  searchEvents() {
-    this.filteredEvents = this.fs.search(this.itemsList, this.query, '_id');
-  }
 
   private _getSubmitObj() {
 
@@ -226,11 +204,11 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
    // const checkedOutDatetime = this.datesGroup.get('checkedOutDatetime').value;
 
     return new DonationsModel(
-      this.selectedCountry,
+      this.donationsForm.get('itemName').value,
       this.donationsForm.get('donatedBy').value,
       this.donationsForm.get('quantity').value,
       this.donationsForm.get('MT').value,
-                                   null,
+      this.selectedCountry.name,
       // this.donationsForm.get('category').value,
       this.datesGroup.get('donatedDatetime').value,
       this.donationsForm.get('description').value,
@@ -245,7 +223,7 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
 
     if (!this.isEdit) {
       this.submitDonationsSub = this.api
-        .postDonations$(this.submitDonationsObj)
+        .postItem$(this.submitDonationsObj)
         .subscribe(
           data => this._handleSubmitSuccess(data),
           err => this._handleSubmitError(err)
@@ -260,24 +238,6 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     }
   }
 
-   getItems () {
-    // Get future, public events
-    this.getItemsSub = this.api
-      .getItems$()
-      .subscribe(
-        res => {
-          this.itemsList = res;
-          this.filteredEvents = res;
-        },
-        err => {
-          console.log(err);
-          this.error = true;
-        }
-      );
-   }
-
-
-
   private _handleSubmitSuccess(res) {
     this.error = false;
     this.submitting = false;
@@ -286,21 +246,10 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     this.router.navigate(['/donadmin', res._id]);
   }
 
-  private _handleGetItemsSuccess(res) {
-    this.error = false;
-    this.submitting = false;
-    // Redirect to event detail]
-    console.log(res);
-    this.router.navigate(['/donadmin', res._id]);
-  }
-
   private _handleSubmitError(err) {
-    console.log(err.message);
+    console.log('there was an error submitting the data edited');
     this.submitting = false;
     this.error = true;
-    if ( err.indexOf('Internal') > -1) {
-      this.flashMessage.show('We are in about component!');
-  }
   }
 
   resetForm() {

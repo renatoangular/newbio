@@ -11,7 +11,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { CallbackComponent } from './pages/callback/callback.component';
 import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
 import { DonComponent } from './pages/admin/don.component';
-
+import { FlashMessagesModule } from 'angular2-flash-messages';
 
 
 @NgModule({
@@ -27,7 +27,8 @@ import { DonComponent } from './pages/admin/don.component';
     BrowserAnimationsModule,
     AppRoutingModule,
     AuthModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
+    FlashMessagesModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

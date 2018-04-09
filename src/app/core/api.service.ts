@@ -10,11 +10,13 @@ import { RsvpModel } from './models/rsvp.model';
 import { DcommentModel } from './models/dcomment.model';
 import { RequestModel } from './models/request.model';
 import { DonationsModel } from './models/donations.model';
-
+import { ItemModel } from './models/item.model';
+import { FlashMessagesService } from 'angular2-flash-messages';
 
 @Injectable()
 export class ApiService {
   constructor(
+    private flashMessage: FlashMessagesService,
     private http: HttpClient,
     private auth: AuthService) { }
 
@@ -23,7 +25,7 @@ export class ApiService {
     return `Bearer ${localStorage.getItem('access_token')}`;
 
   }
-
+  
   // GET list of public, future events
   getEvents$(): Observable<EventModel[]> {
     return this.http
@@ -35,6 +37,13 @@ export class ApiService {
     getDonations$(): Observable<DonationsModel[]> {
       return this.http
         .get(`${ENV.BASE_API}donations`)
+        .catch(this._handleError);
+    }
+
+    // GET list of donations
+    getItems$(): Observable<ItemModel[]> {
+      return this.http
+        .get(`${ENV.BASE_API}items`)
         .catch(this._handleError);
     }
 
@@ -118,6 +127,15 @@ export class ApiService {
         })
         .catch(this._handleError);
     }
+
+      // POST new item (admin only)
+      postItem$(item: ItemModel): Observable<ItemModel> {
+        return this.http
+          .post(`${ENV.BASE_API}item/new`, item, {
+            headers: new HttpHeaders().set('Authorization', this._authHeader)
+          })
+          .catch(this._handleError);
+      }
 
   // PUT existing event (admin only)
   editEvent$(id: string, event: EventModel): Observable<EventModel> {
@@ -220,11 +238,13 @@ export class ApiService {
     }
 
   private _handleError(err: HttpErrorResponse | any) {
+
     const errorMsg = err.message || 'Error: Unable to complete request.';
-    if (err.message && err.message.indexOf('No JWT present') > -1) {
+    if (err.message && err.message.indexOf('itemName') > -1) {
       this.auth.login();
     }
+  let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
     return Observable.throw(errorMsg);
-  }
+   }
 
 }

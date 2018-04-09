@@ -10,6 +10,7 @@ const Event = require('./models/Event');
 const Rsvp = require('./models/Rsvp');
 const Dcomment = require('./models/Dcomment');
 const Donation = require('./models/Donations');
+const Item = require('./models/Item');
 /*
  |--------------------------------------
  | Authentication Middleware
@@ -48,6 +49,8 @@ module.exports = function(app, config) {
 
   const _eventListProjection = 'title startDatetime endDatetime viewPublic';
   const _donationsListProjection = 'itemName viewPublic donatedDatetime';
+  const _itemsListProjection = 'itemName donatedDatetime';
+  
   // GET API root
   app.get('/api/', (req, res) => {
     res.send('API works');
@@ -72,7 +75,7 @@ module.exports = function(app, config) {
     );
   });
 
-    // GET list of items public items
+    // GET list of donatiions public donations
     app.get('/api/donations', (req, res) => {
       Donation.find({viewPublic: true},
         _donationsListProjection, (err, donations) => {
@@ -89,6 +92,24 @@ module.exports = function(app, config) {
         }
       );
     });
+
+        // GET list of items items
+        app.get('/api/items', (req, res) => {
+          Item.find(null,
+            _donationsListProjection, (err, donations) => {
+              let donationsArr = [];
+              if (err) {
+                return res.status(500).send({message: err.message});
+              }
+              if (donations) {
+                donations.forEach(donation => {
+                  donationsArr.push(donation);
+                });
+              }
+              res.send(donationsArr);
+            }
+          );
+        });
 
 
   // GET list of all events, public and private (admin only)
@@ -267,7 +288,6 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
       description: req.body.description,
       viewPublic: req.body.viewPublic
     });
-    
     donation.save((err) => {
       if (err) {
         return res.status(500).send({message: 'test' +err.message});
@@ -276,6 +296,47 @@ app.post('/api/donations/new', jwtCheck, adminCheck, (req, res) => {
     });
   });
 });
+
+
+
+// POST a new item
+app.post('/api/item/new', jwtCheck, adminCheck, (req, res) => {
+  Item.findOne({
+    itemName: req.body.itemName,
+    donatedBy: req.body.donatedBy,
+    quantity: req.body.quantity,
+    MT: req.body.MT,
+    category:  req.body.category,
+    donatedDatetime: req.body.donatedDatetime}, (err, existingEvent) => {
+    if (err) {
+      return res.status(500).send({message: err.message});
+    }
+  // if (existingEvent) {
+    //  return res.status(409).send({message: 'You have already created an item with this name, location, and start date/time.'});
+   // }
+   
+    const item = new Item({
+      itemName: req.body.itemName,
+      donatedBy: req.body.donatedBy,
+      quantity: req.body.quantity,
+      MT: req.body.MT,
+      category:  req.body.category,
+      donatedDatetime: req.body.donatedDatetime,
+      description: req.body.description,
+      viewPublic: req.body.viewPublic
+    });
+    item.save((err) => {
+      if (err) {
+        return res.status(500).send({message: 'test' +err.message});
+      }
+      res.send(item);
+    });
+  });
+});
+
+
+
+
 
   // PUT (edit) an existing event
   app.put('/api/event/:id', jwtCheck, adminCheck, (req, res) => {
