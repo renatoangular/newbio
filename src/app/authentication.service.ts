@@ -20,6 +20,7 @@ export interface TokenPayload {
   email: string;
   password: string;
   name?: string;
+  getNewsletter?: boolean;
 }
 
 @Injectable()
@@ -85,6 +86,8 @@ export class AuthenticationService {
   public register(user: TokenPayload): Observable<any> {
     return this.request('post', 'register', user);
   }
+
+ // postRegister
 
   public login(user: TokenPayload): Observable<any> {
     return this.request('post', 'login', user);

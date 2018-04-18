@@ -17,6 +17,35 @@
           <label for="password">Password</label>
           <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="credentials.password">
         </div>
+                  <!-- View Public -->
+  <div class="form-group">
+    <label class="label-inline-group">Would you like to receive our Newsletter?</label>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input
+          id="getNewsletter-yes"
+          type="radio"
+          class="form-check-input"
+          [value]="true"         
+          formControlName="getNewsletter"> Yes
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <label class="form-check-label">
+        <input
+          id="getNewsletter-no"
+          type="radio"
+          class="form-check-input"
+          [value]="false"
+          formControlName="getNewsletter"> No
+      </label>
+    </div>
+    <div
+      *ngIf="formErrors.getNewsletter"
+      class="small text-danger formErrors"
+      [innerHTML]="formErrors.getNewsletter">
+    </div>
+  </div>
         <button type="submit" class="btn btn-default">Register!</button>
       </form>
     </div>

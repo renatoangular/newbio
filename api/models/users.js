@@ -12,6 +12,11 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+
+  getNewsletter: {
+    type: Boolean,
+    required: false
+  },
   hash: String,
   salt: String
 });
@@ -34,6 +39,7 @@ userSchema.methods.generateJwt = function() {
     _id: this._id,
     email: this.email,
     name: this.name,
+    getNewsletter: this.getNewsletter,
     exp: parseInt(expiry.getTime() / 1000),
   }, "MY_SECRET"); // DO NOT KEEP YOUR SECRET IN THE CODE!
 };

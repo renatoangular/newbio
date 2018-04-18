@@ -12,7 +12,7 @@ import { RequestModel } from './models/request.model';
 import { DonationsModel } from './models/donations.model';
 import { ItemModel } from './models/item.model';
 import { FlashMessagesService } from 'angular2-flash-messages';
-import { TokenPayload } from '../authentication.service';
+import { TokenPayload, UserDetails } from '../authentication.service';
 
 @Injectable()
 export class ApiService {
@@ -144,7 +144,14 @@ export class ApiService {
       })
       .catch(this._handleError);
   }
-
+  // get Profile
+  getProfile$(): Observable<TokenPayload> {
+    return this.http
+      .get(`${ENV.BASE_API}profile`,  {
+        headers: new HttpHeaders().set('Authorization', this._authHeader)
+      })
+      .catch(this._handleError);
+  }
   // POST new donations (admin only)
   postDonations$(donations: DonationsModel): Observable<DonationsModel> {
     return this.http
