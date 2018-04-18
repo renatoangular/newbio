@@ -12,6 +12,11 @@ import { CallbackComponent } from './pages/callback/callback.component';
 import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
 import { DonComponent } from './pages/admin/don.component';
 import { FlashMessagesModule } from 'angular2-flash-messages';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { AuthGuardService } from './auth-guard.service';
+import { AuthenticationService } from './authentication.service';
 
 
 @NgModule({
@@ -20,7 +25,12 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
     HomeComponent,
     CallbackComponent,
     MyRsvpsComponent,
-    DonComponent
+    DonComponent,
+    AppComponent,
+    ProfileComponent,
+    LoginComponent,
+    RegisterComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +40,9 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
     CoreModule.forRoot(),
     FlashMessagesModule.forRoot()
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [    AuthenticationService,
+    AuthGuardService],
+  bootstrap: [AppComponent],
+
 })
 export class AppModule { }

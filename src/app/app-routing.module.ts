@@ -9,6 +9,10 @@ import { CallbackComponent } from './pages/callback/callback.component';
 import { MyRsvpsComponent } from './pages/my-rsvps/my-rsvps.component';
 import { DonComponent } from './pages/admin/don.component';
 import { EventComponent} from './pages/donations/event.component'
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { AuthGuardService } from './auth-guard.service';
 
 const routes: Routes = [
   {
@@ -41,6 +45,14 @@ const routes: Routes = [
       AuthGuard
     ]
   },
+{
+  path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]
+
+  },
+
   {
     path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',

@@ -3,6 +3,17 @@
  | Dependencies
  |--------------------------------------
  */
+ 
+ 
+var logger = require('morgan');
+var cookieParser = require('cookie-parser'); 
+// [SH] Require Passport
+var passport = require('passport');
+
+// [SH] Bring in the data model
+require('./api/models/db');
+// [SH] Bring in the Passport config after model is defined
+require('./api/config/passport');
 
 // Modules
 const express = require('express');
@@ -23,7 +34,7 @@ const config = require('./server/config');
 mongoose.connect(config.MONGO_URI);
 const monDb = mongoose.connection;
 
-monDb.on('error', function() {
+monDb.on('error', function () {
   console.error('MongoDB Connection Error. Please make sure that', config.MONGO_URI, 'is running.');
 });
 
@@ -64,7 +75,7 @@ require('./server/api')(app, config);
 // Pass routing to Angular app
 // Don't run in dev
 if (process.env.NODE_ENV !== 'dev') {
-  app.get('*', function(req, res) {
+  app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '/dist/index.html'));
   });
 }

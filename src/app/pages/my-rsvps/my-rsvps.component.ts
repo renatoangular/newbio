@@ -34,7 +34,7 @@ export class MyRsvpsComponent implements OnInit, OnDestroy {
   }
 
   private _getEventList() {
-    this.loading = true;
+    this.loading = false;
     // Get events user has RSVPed to
     this.eventListSub = this.api
       .getUserEvents$(this.auth.userProfile.sub)
