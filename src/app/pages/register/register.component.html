@@ -1,85 +1,137 @@
-<div class="container">
 
-  <div class="row">
-    <div class="col-md-6">
-      <h1>Register</h1>
-      <p class="lead">Already a member? Please <a routerLink="/login">log in</a> instead.</p>
-      <form (submit)="register()">
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <input type="text" class="form-control" name="name" placeholder="Enter your name" [(ngModel)]="credentials.name">
-        </div>
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" class="form-control" name="email" placeholder="Enter email" [(ngModel)]="credentials.email">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="credentials.password">
-        </div>
-                  <!-- View Public -->
-  <div class="form-group">
-    <label class="label-inline-group">Would you like to receive our Newsletter?</label>
-    <div class="form-check form-check-inline">
-      <label class="form-check-label">
+    <h1>Register</h1>
+    <p class="lead">Already a member? Please
+      <a routerLink="/login">log in</a> instead.</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <!-- name -->
+      <div class="form-group">
+        <label for="name">Full Name</label>
         <input
-          id="getnewsletter-yes"
-          type="radio"
-          class="form-check-input"
-          [value]="true"         
-          formControlName="getnewsletter"> Yes
-      </label>
-    </div>   
-    <div class="form-check form-check-inline">
-      <label class="form-check-label">
-        <input
-          id="getnewsletter-no"
-          type="radio"
-          class="form-check-input"
-          [value]="false"
-          formControlName="getnewsletter"> No
-      </label>
+        id="name" 
+        type="text" 
+        class="form-control" 
+        formControlName="name"
+        placeholder="Enter your name" 
+        [maxlength]="ef.titleMax">
+        <div
+        *ngIf="formErrors.email"
+        class="small text-danger formErrors"
+        [innerHTML]="formErrors.email">
+      </div>
     </div>
-    <div
-      *ngIf="formErrors.getnewsletter"
-      class="small text-danger formErrors"
-      [innerHTML]="formErrors.getnewsletter">
-    </div>
-  </div>
 
+      <!-- email -->
+      <div class="form-group">
+          <label for="name">Email Address</label>
+          <input
+            id="email"
+            type="text"
+            class="form-control"
+            formControlName="email"
+            [maxlength]="ef.locMax">
+          <div
+            *ngIf="formErrors.email"
+            class="small text-danger formErrors"
+            [innerHTML]="formErrors.email">
+          </div>
+        </div>
 
+     
+      <!-- password -->
+      <div class="form-group">
+          <label for="name">Password</label>
+          <input
+            id="password"
+            type="text"
+            class="form-control"
+            formControlName="password"
+            [maxlength]="ef.locMax">
+          <div
+            *ngIf="formErrors.password"
+            class="small text-danger formErrors"
+            [innerHTML]="formErrors.password">
+          </div>
+        </div>
 
+          <!-- Get Newsletter -->
   <div class="form-group">
-      <label class="label-inline-group">Request Admin Privilleges?</label>
+      <label class="label-inline-group">Get Newsletter?</label>
       <div class="form-check form-check-inline">
         <label class="form-check-label">
           <input
-            id="isadmin-yes"
+            id="getnewsletter-yes"
             type="radio"
             class="form-check-input"
-            [value]="true"         
-            formControlName="isadmin"> Yes
+            [value]="true"
+            formControlName="getnewsletter"> Yes
         </label>
       </div>
       <div class="form-check form-check-inline">
         <label class="form-check-label">
           <input
-            id="isadmin-no"
+            id="newsletter-no"
             type="radio"
             class="form-check-input"
             [value]="false"
-            formControlName="isadmin"> No
+            formControlName="getnewsletter"> No
         </label>
       </div>
       <div
-        *ngIf="formErrors.isadmin"
+        *ngIf="formErrors.getnewsletter"
         class="small text-danger formErrors"
-        [innerHTML]="formErrors.isadmin">
+        [innerHTML]="formErrors.getnewsletter">
       </div>
     </div>
-        <button type="submit" class="btn btn-default">Register!</button>
-      </form>
-    </div>
-  </div>
 
-</div>
+          <!-- request admin  -->
+          <div class="form-group">
+              <label class="label-inline-group">Request Admin Access</label>
+              <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                  <input
+                    id="isadmin-yes"
+                    type="radio"
+                    class="form-check-input"
+                    [value]="true"
+                    formControlName="isadmin"> Yes
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                  <input
+                    id="isadmin-no"
+                    type="radio"
+                    class="form-check-input"
+                    [value]="false"
+                    formControlName="isadmin"> No
+                </label>
+              </div>
+              <div
+                *ngIf="formErrors.isadmin"
+                class="small text-danger formErrors"
+                [innerHTML]="formErrors.isadmin">
+              </div>
+            </div>
+
+  <!-- Submit -->
+  <div class="form-group">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [attr.disabled]="registerForm.invalid || submitting ? true : null"
+        [innerText]="submitBtnText"></button>
+        <!-- https://github.com/angular/angular/issues/11271#issuecomment-289806196 -->
+      <app-submitting *ngIf="submitting"></app-submitting>
+      <a
+        *ngIf="!submitting"
+        class="btn btn-link"
+        (click)="resetForm()"
+        tabindex="0">Reset Form</a>
+  
+        <!-- API submission error -->
+    <p *ngIf="error" class="mt-3 alert alert-danger">
+      <strong>Error:</strong> There was a problem submitting the registration. Please try again.
+    </p>
+  </div>
+</form>

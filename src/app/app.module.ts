@@ -19,7 +19,6 @@ import { AuthGuardService } from './auth-guard.service';
 import { AuthenticationService } from './authentication.service';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 
-import { MaterialModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -37,7 +36,6 @@ import { MaterialModule } from '@angular/material';
   ],
   imports: [
     BrowserModule,
-    [MaterialModule],
     BrowserAnimationsModule,
     AppRoutingModule,
     AuthModule.forRoot(),
