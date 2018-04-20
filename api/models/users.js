@@ -13,7 +13,12 @@ var userSchema = new mongoose.Schema({
     required: true
   },
 
-  getNewsletter: {
+  getnewsletter: {
+    type: Boolean,
+    required: false
+  },
+
+  isadmin: {
     type: Boolean,
     required: false
   },
@@ -39,7 +44,8 @@ userSchema.methods.generateJwt = function() {
     _id: this._id,
     email: this.email,
     name: this.name,
-    getNewsletter: this.getNewsletter,
+    getnewsletter: this.getnewsletter,
+    isadmin: this.isadmin,
     exp: parseInt(expiry.getTime() / 1000),
   }, "MY_SECRET"); // DO NOT KEEP YOUR SECRET IN THE CODE!
 };

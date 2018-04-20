@@ -17,7 +17,9 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { AuthGuardService } from './auth-guard.service';
 import { AuthenticationService } from './authentication.service';
+import { RegisterFormComponent } from './pages/register-form/register-form.component';
 
+import { MaterialModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -30,10 +32,12 @@ import { AuthenticationService } from './authentication.service';
     ProfileComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    RegisterFormComponent,
   ],
   imports: [
     BrowserModule,
+    [MaterialModule],
     BrowserAnimationsModule,
     AppRoutingModule,
     AuthModule.forRoot(),

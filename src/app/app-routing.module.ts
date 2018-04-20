@@ -13,6 +13,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AuthGuardService } from './auth-guard.service';
+import {RegisterFormComponent} from './pages/register-form/register-form.component'
+
 
 const routes: Routes = [
   {
@@ -49,7 +51,7 @@ const routes: Routes = [
   path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuardService]
+  { path: 'profile', component: ProfileComponent // canActivate: [AuthGuardService]
 
   },
 

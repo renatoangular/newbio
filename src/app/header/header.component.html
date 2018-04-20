@@ -10,12 +10,11 @@
     <h1 class="logo-font">conduit</h1>
     
     <div class="header-page-authStatus">
-      <a *ngIf="!auth.loggedIn" (click)="auth.login()">Log In</a>
-      <span *ngIf="auth.loggedIn">
-        <a routerLink="/login">{{auth.userProfile?.name}}</a>
-        <span class="opacity-half">|</span>
-        <a (click)="auth.logout()">Log Out</a>
-      </span>
+      <a *ngIf="!auth2.isLoggedIn" (click)="auth2.login()">Logggg In</a>
+      <span *ngIf="auth2.isLoggedIn">
+        <a routerLink="/profile">{{details?.name}}</a>        
+        <a (click)="auth2.logout()">Log Out</a>
+       </span>
     </div>
   </div>
 

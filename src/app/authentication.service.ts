@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
 import { Router } from '@angular/router';
+import { ENV } from './core/env.config';
 
 export interface UserDetails {
   _id: string;
@@ -10,24 +11,27 @@ export interface UserDetails {
   name: string;
   exp: number;
   iat: number;
+  isadmin: boolean;  // localStorage.getItem('isadmin') === 'true';
+  getnewsletter: boolean,
+  isLoggedIn: boolean;
 }
 
 interface TokenResponse {
   token: string;
 }
-
 export interface TokenPayload {
   email: string;
   password: string;
   name?: string;
-  getNewsletter?: boolean;
+  getnewsletter?: boolean;
+  isadmin?: boolean;
 }
 
 @Injectable()
 export class AuthenticationService {
   private token: string;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   private saveToken(token: string): void {
     localStorage.setItem('mean-token', token);
@@ -37,6 +41,7 @@ export class AuthenticationService {
   private getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('mean-token');
+      console.log('this is the token at getToken auth..svc.ts' + this.token);
     }
     return this.token;
   }
@@ -47,6 +52,8 @@ export class AuthenticationService {
     if (token) {
       payload = token.split('.')[1];
       payload = window.atob(payload);
+      console.log('payload at getUserDetails auth..svc.ts' + payload);
+
       return JSON.parse(payload);
     } else {
       return null;
@@ -62,18 +69,19 @@ export class AuthenticationService {
     }
   }
 
-  private request(method: 'post'|'get', type: 'login'|'register'|'profile', user?: TokenPayload): Observable<any> {
+  private request(method: 'post' | 'get', type: 'login' | 'register' | 'profile', user?: TokenPayload): Observable<any> {
     let base;
 
     if (method === 'post') {
-      base = this.http.post(`/api/${type}`, user);
+      base = this.http.post(`${ENV.BASE_API}${type}`, user);
     } else {
-      base = this.http.get(`/api/${type}`, { headers: { Authorization: `Bearer ${this.getToken()}` }});
+      base = this.http.get(`${ENV.BASE_API}${type}`, { headers: { Authorization: `Bearer ${this.getToken()}` } });
     }
 
     const request = base.pipe(
       map((data: TokenResponse) => {
         if (data.token) {
+          console.log(data.token);
           this.saveToken(data.token);
         }
         return data;
@@ -84,10 +92,11 @@ export class AuthenticationService {
   }
 
   public register(user: TokenPayload): Observable<any> {
+
     return this.request('post', 'register', user);
   }
 
- // postRegister
+  // postRegister
 
   public login(user: TokenPayload): Observable<any> {
     return this.request('post', 'login', user);
@@ -100,6 +109,7 @@ export class AuthenticationService {
   public logout(): void {
     this.token = '';
     window.localStorage.removeItem('mean-token');
-    this.router.navigateByUrl('/');
+    window.localStorage.removeItem('token');
+    this.router.navigateByUrl('/login');
   }
 }

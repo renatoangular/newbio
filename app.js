@@ -15,7 +15,6 @@ require('./api/models/db');
 // [SH] Bring in the Passport config after model is defined
 require('./api/config/passport');
 
-// Modules
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');

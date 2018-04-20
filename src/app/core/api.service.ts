@@ -13,9 +13,13 @@ import { DonationsModel } from './models/donations.model';
 import { ItemModel } from './models/item.model';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { TokenPayload, UserDetails } from '../authentication.service';
+import { RegisterModel } from './models/register.model';
 
 @Injectable()
 export class ApiService {
+
+  private token: string;
+
   constructor(
     private flashMessage: FlashMessagesService,
     private http: HttpClient,
@@ -25,6 +29,13 @@ export class ApiService {
     console.log(`Bearer ${localStorage.getItem('access_token')}`);
     return `Bearer ${localStorage.getItem('access_token')}`;
 
+  }
+  // get user token
+  private getToken(): string {
+    if (!this.token) {
+      this.token = localStorage.getItem('mean-token');
+    }
+    return this.token;
   }
 
   // GET list of public, future events
@@ -144,14 +155,16 @@ export class ApiService {
       })
       .catch(this._handleError);
   }
-  // get Profile
-  getProfile$(): Observable<TokenPayload> {
+  // get Profile    base = this.http.get(`/api/${type}`, { headers: { Authorization: `Bearer ${this.getToken()}` }});
+  getProfile$(): Observable<any> {
     return this.http
       .get(`${ENV.BASE_API}profile`,  {
-        headers: new HttpHeaders().set('Authorization', this._authHeader)
+        headers: { Authorization: `Bearer ${this.getToken()}` }
       })
       .catch(this._handleError);
-  }
+      }
+
+
   // POST new donations (admin only)
   postDonations$(donations: DonationsModel): Observable<DonationsModel> {
     return this.http
@@ -179,6 +192,14 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // PUT existing event (admin only)
+    editRegister$(id: string, register: RegisterModel): Observable<RegisterModel> {
+      return this.http
+        .put(`${ENV.BASE_API}register/${id}`, register, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
   // PUT existing event (admin only)
   editDonations$(id: string, donations: DonationsModel): Observable<DonationsModel> {
     return this.http

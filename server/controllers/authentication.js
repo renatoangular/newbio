@@ -19,9 +19,11 @@ module.exports.register = function(req, res) {
   var user = new User();
 
   user.name = req.body.name;
-  user.getNewsletter = req.body.getNewsletter;
+  user.getnewsletter = req.body.getnewsletter;
+  user.isadmin = req.body.isadmin;
   user.email = req.body.email;
-   console.log('this is an email and password', req.body.email, req.body.password);
+
+   console.log('this is an email and password', req.body.isadmin, req.body.password);
   user.setPassword(req.body.password);
 
   user.save(function(err) {

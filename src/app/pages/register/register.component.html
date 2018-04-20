@@ -6,7 +6,7 @@
       <p class="lead">Already a member? Please <a routerLink="/login">log in</a> instead.</p>
       <form (submit)="register()">
         <div class="form-group">
-          <label for="name">Full name</label>
+          <label for="name">Full Name</label>
           <input type="text" class="form-control" name="name" placeholder="Enter your name" [(ngModel)]="credentials.name">
         </div>
         <div class="form-group">
@@ -23,29 +23,60 @@
     <div class="form-check form-check-inline">
       <label class="form-check-label">
         <input
-          id="getNewsletter-yes"
+          id="getnewsletter-yes"
           type="radio"
           class="form-check-input"
           [value]="true"         
-          formControlName="getNewsletter"> Yes
+          formControlName="getnewsletter"> Yes
       </label>
-    </div>
+    </div>   
     <div class="form-check form-check-inline">
       <label class="form-check-label">
         <input
-          id="getNewsletter-no"
+          id="getnewsletter-no"
           type="radio"
           class="form-check-input"
           [value]="false"
-          formControlName="getNewsletter"> No
+          formControlName="getnewsletter"> No
       </label>
     </div>
     <div
-      *ngIf="formErrors.getNewsletter"
+      *ngIf="formErrors.getnewsletter"
       class="small text-danger formErrors"
-      [innerHTML]="formErrors.getNewsletter">
+      [innerHTML]="formErrors.getnewsletter">
     </div>
   </div>
+
+
+
+  <div class="form-group">
+      <label class="label-inline-group">Request Admin Privilleges?</label>
+      <div class="form-check form-check-inline">
+        <label class="form-check-label">
+          <input
+            id="isadmin-yes"
+            type="radio"
+            class="form-check-input"
+            [value]="true"         
+            formControlName="isadmin"> Yes
+        </label>
+      </div>
+      <div class="form-check form-check-inline">
+        <label class="form-check-label">
+          <input
+            id="isadmin-no"
+            type="radio"
+            class="form-check-input"
+            [value]="false"
+            formControlName="isadmin"> No
+        </label>
+      </div>
+      <div
+        *ngIf="formErrors.isadmin"
+        class="small text-danger formErrors"
+        [innerHTML]="formErrors.isadmin">
+      </div>
+    </div>
         <button type="submit" class="btn btn-default">Register!</button>
       </form>
     </div>

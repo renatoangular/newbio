@@ -78,7 +78,7 @@ var ctrlProfile = require('./controllers/profile');
 var ctrlAuth = require('./controllers/authentication');
 
 // profile
-router.get('/profile', auth, ctrlProfile.profileRead);
+app.get('/api/profile', auth, ctrlProfile.profileRead);
 
 // authentication
 app.post('/api/register', ctrlAuth.register)
@@ -108,6 +108,18 @@ app.post('/api/login', ctrlAuth.login);
         res.send(eventsArr);
       }
     );
+  });
+
+  app.get('/api/register/:id', (req, res) => {
+    Register.findById(req.params.id, (err, register) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (!register) {
+        return res.status(400).send({ message: 'registration not found.' });
+      }
+      res.send(register);
+    });
   });
 
   // GET list of donatiions public donations
@@ -297,6 +309,35 @@ app.post('/api/login', ctrlAuth.login);
     });
   });
 
+  // POST a new registration
+  app.post('/api/register/new' ,    (req, res) => {
+
+    Register.findOne({
+      email: req.body.email,
+      password: req.body.password
+    }, (err, existingRegister) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (existingRegister) {
+        return res.status(409).send({ message: 'You have already created an event with this title, location, and start date/time.' });
+      }
+      const register = new Register({
+        email: req.body.email,
+        password: req.body.password,
+        startDatetime: req.body.isadmin,
+        endDatetime: req.body.getnewsletter
+      });
+      register.save((err) => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        res.send(event);
+      });
+    });
+  });
+
+  
   // POST a new donation
   app.post('/api/donations/new' ,    (req, res) => {
     Donation.findOne({

@@ -6,6 +6,7 @@ import { UtilsService } from './../../core/utils.service';
 import { FilterSortService } from './../../core/filter-sort.service';
 import { Subscription } from 'rxjs/Subscription';
 import { EventModel } from './../../core/models/event.model';
+import { AuthenticationService } from '../../authentication.service';
 
 @Component({
   selector: 'app-my-rsvps',
@@ -23,6 +24,7 @@ export class MyRsvpsComponent implements OnInit, OnDestroy {
   constructor(
     private title: Title,
     public auth: AuthService,
+    public auth2: AuthenticationService,
     private api: ApiService,
     public fs: FilterSortService,
     public utils: UtilsService) { }
