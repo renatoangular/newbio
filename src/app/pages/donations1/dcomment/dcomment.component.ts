@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { expandCollapse } from './../../../core/expand-collapse.animation';
-import { AuthService } from './../../../auth/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { ApiService } from './../../../core/api.service';
 import { UtilsService } from './../../../core/utils.service';
 import { FilterSortService } from './../../../core/filter-sort.service';
@@ -82,7 +82,7 @@ export class DcommentComponent implements OnInit, OnDestroy {
     // If RSVP matching user ID is already
     // in RSVP array, set as initial RSVP
     const _initialUserDcomment = this.dcomments.filter(dcomment => {
-        return dcomment.userId === this.auth.userProfile.sub;
+        return dcomment.userId === this.auth.currentUser._id;
       })[0];
 
     // If user has not RSVPed before and has made
@@ -99,7 +99,7 @@ export class DcommentComponent implements OnInit, OnDestroy {
     let guests = 0;
     const dcommentArr = this.dcomments.map(dcomment => {
       // If user has an existing RSVP
-      if (dcomment.userId === this.auth.userProfile.sub) {
+      if (dcomment.userId === this.auth.currentUser._id) {
         if (changed) {
           // If user edited their RSVP, set with updated data
           dcomment = this.userDcomment;

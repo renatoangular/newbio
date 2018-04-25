@@ -298,9 +298,6 @@ export class DonationsFormComponent implements OnInit, OnDestroy {
     console.log(err.message);
     this.submitting = false;
     this.error = true;
-    if ( err.indexOf('Internal') > -1) {
-      this.flashMessage.show('We are in about component!');
-  }
   }
 
   resetForm() {

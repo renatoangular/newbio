@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { expandCollapse } from './../../../core/expand-collapse.animation';
-import { AuthService } from './../../../auth/auth.service';
+import { expandCollapse } from './../../../core/expand-collapse.animation'; 
 import { ApiService } from './../../../core/api.service';
 import { UtilsService } from './../../../core/utils.service';
 import { FilterSortService } from './../../../core/filter-sort.service';
 import { RsvpModel } from './../../../core/models/rsvp.model';
 import { Subscription } from 'rxjs/Subscription';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-rsvp',
@@ -81,7 +81,7 @@ export class RsvpComponent implements OnInit, OnDestroy {
     // If RSVP matching user ID is already
     // in RSVP array, set as initial RSVP
     const _initialUserRsvp = this.rsvps.filter(rsvp => {
-        return rsvp.userId === this.auth.userProfile.sub;
+        return rsvp.userId === this.auth.currentUser._id;
       })[0];
 
     // If user has not RSVPed before and has made
@@ -98,7 +98,7 @@ export class RsvpComponent implements OnInit, OnDestroy {
     let guests = 0;
     const rsvpArr = this.rsvps.map(rsvp => {
       // If user has an existing RSVP
-      if (rsvp.userId === this.auth.userProfile.sub) {
+      if (rsvp.userId === this.auth.currentUser._id) {
         if (changed) {
           // If user edited their RSVP, set with updated data
           rsvp = this.userRsvp;

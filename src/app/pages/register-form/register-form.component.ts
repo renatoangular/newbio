@@ -8,8 +8,8 @@ import { DatePipe } from '@angular/common';
 import { dateValidator } from './../../core/forms/date.validator';
 import { dateRangeValidator } from './../../core/forms/date-range.validator';
 import { DATE_REGEX, TIME_REGEX, stringsToDate } from './../../core/forms/formUtils.factory';
-import { RegisterFormService } from './register-form.service';
-import { AuthenticationService } from '../../authentication.service';
+import { RegisterFormService } from './register-form.service'; 
+import { AuthService } from '../../auth/auth99.service';
 
 
 @Component({
@@ -40,7 +40,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
-    private auth: AuthenticationService,
+    private auth: AuthService,
     private datePipe: DatePipe,
     public ef: RegisterFormService,
     private router: Router) { }

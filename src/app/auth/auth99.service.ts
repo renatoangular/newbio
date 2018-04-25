@@ -21,7 +21,7 @@ export class AuthService {
     audience: AUTH_CONFIG.AUDIENCE,
     scope: AUTH_CONFIG.SCOPE
   });
-  userProfile: any;
+  currentUser: any;
   isAdmin: boolean;
   // Create a stream of logged in status to communicate throughout app
   loggedIn: boolean;
@@ -37,7 +37,7 @@ export class AuthService {
     const lsProfile = localStorage.getItem('profile');
 
     if (this.tokenValid) {
-      this.userProfile = JSON.parse(lsProfile);
+      this.currentUser = JSON.parse(lsProfile);
       this.isAdmin = localStorage.getItem('isAdmin') === 'true';
       this.setLoggedIn(true);
       this.scheduleRenewal();
@@ -96,7 +96,7 @@ export class AuthService {
     // If initial login, set profile and admin information
     if (profile) {
       localStorage.setItem('profile', JSON.stringify(profile));
-      this.userProfile = profile;
+      this.currentUser = profile;
       this.isAdmin = this._checkAdmin(profile);
       localStorage.setItem('isAdmin', this.isAdmin.toString());
     }
@@ -141,7 +141,7 @@ export class AuthService {
     localStorage.removeItem('expires_at');
     this._clearRedirect();
     // Reset local properties, update loggedIn$ stream
-    this.userProfile = undefined;
+    this.currentUser = undefined;
     this.isAdmin = undefined;
     this.setLoggedIn(false);
     // Unschedule access token renewal

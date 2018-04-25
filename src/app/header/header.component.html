@@ -7,13 +7,11 @@
     <h1 class="header-page-siteTitle">
       <a routerLink="/login">Biolinkdepot.org</a>
     </h1>
-    <h1 class="logo-font">conduit</h1>
     
-    <div class="header-page-authStatus">
-      <a *ngIf="!auth2.isLoggedIn" (click)="auth2.login()">Logggg In</a>
-      <span *ngIf="auth2.isLoggedIn">
-        <a routerLink="/profile">{{details?.name}}</a>        
-        <a (click)="auth2.logout()">Log Out</a>
+    <div *ngIf="auth2.isLoggedIn" class="header-page-authStatus">
+      <a  (click)="auth2.login()">Logggg In</a>
+      <span *ngIf="!auth2.isLoggedIn">      
+        <a (click)="onLogoutClick()">Log Out</a>
        </span>
     </div>
   </div>
@@ -22,8 +20,8 @@
     <ul class="nav-list">
         <li>
             <a
-              *ngIf="auth.loggedIn && auth.isAdmin"
-              routerLink="/admin"
+              *ngIf="auth2.isLoggedIn"
+              routerLink="/admin" 
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }">Admin Events</a>
           </li>
@@ -43,26 +41,26 @@
       </li>
       <li>
         <a
-          *ngIf="auth.loggedIn"
+          *ngIf="auth2.isLoggedIn"
           routerLink="/my-rsvps"
           routerLinkActive="active">My RSVPs</a>
       </li>
       <li>
         <a
-          *ngIf="auth.loggedIn"
+          *ngIf="auth2.isLoggedIn"
           routerLink="/donations"
           routerLinkActive="active">Inventory</a>
       </li>
 
       <li>
         <a
-          *ngIf="auth.loggedIn && auth.isAdmin"
+          *ngIf="auth2.isLoggedIn && auth2.isAdmin"
           routerLink="/admin/event/new"
           routerLinkActive="active">Create Event</a>
       </li>
       <li>
           <a
-            *ngIf="auth.loggedIn && auth.isAdmin"
+            *ngIf="auth2.isLoggedIn && auth2.isAdmin"
             routerLink="/admin/donations/new"
             routerLinkActive="active">Create Donations</a>
         </li>

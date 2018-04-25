@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AuthService } from './../../../auth/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { UtilsService } from './../../../core/utils.service';
 import { EventModel } from './../../../core/models/event.model';
 import { DonationsModel } from '../../../core/models/donations.model';

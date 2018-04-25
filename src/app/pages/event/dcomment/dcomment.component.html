@@ -1,7 +1,4 @@
-<div class="card-block">
-  <h2 class="card-title text-center">RSVP</h2>
-  <app-loading *ngIf="loading"></app-loading>
-</div>
+
 
 <!-- Event is over -->
 <p *ngIf="eventPast" class="card-block lead">
@@ -44,14 +41,7 @@
       </div>
     </ng-template>
 
-    <!-- No RSVP yet -->
-    <div *ngIf="!userDcomment" class="card-block">
-      <p class="lead">Fill out the form below to request item:</p>
-
-      <app-dcomment-form
-        [eventId]="eventId"
-        (submitDcomment)="onSubmitDcomment($event)"></app-dcomment-form>
-    </div>
+   
   </ng-template>
 
   <!-- All RSVPs -->
@@ -102,6 +92,4 @@
 </ng-template>
 
 <!-- Footer showing # of total wishList guests -->
-<div class="card-footer text-right">
-  <small *ngIf="totalwishList >= 0" class="text-muted">{{utils.displayCount(totalwishList)}} {{footerTense}}</small>
-</div>
+ 

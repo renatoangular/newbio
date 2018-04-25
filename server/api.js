@@ -11,22 +11,18 @@ const Rsvp = require('./models/Rsvp');
 const Dcomment = require('./models/Dcomment');
 const Donation = require('./models/Donations');
 const Item = require('./models/Item');
-
-
 var express = require('express');
 var router = express.Router();
+var User1 = require('./models/User1');
+
 /*
  |--------------------------------------
  | Authentication Middleware
  |--------------------------------------
  */
 
-module.exports = function (app, config) {
-
-
+module.exports = function (app, config) { 
   // Authentication middleware
- 
-
   // Check for an authenticated admin user
   const adminCheck = (req, res, next) => {
     const roles = req.user[config.NAMESPACE] || [];
@@ -60,32 +56,99 @@ module.exports = function (app, config) {
     res.send('API works');
   });
 
- //  app.get('/', routes.index);
-//  app.get('/api/users', auth, user.list);
+  //  app.get('/', routes.index);
+  //  app.get('/api/users', auth, user.list);
 
   // route to test if the user is logged in or not
   app.get('/loggedin', function (req, res) {
     res.send(req.isAuthenticated() ? req.user : '0');
   });
 
-var jwt = require('express-jwt');
-var auth = jwt({
-  secret: 'MY_SECRET',
-  userProperty: 'payload'
+  var jwt = require('express-jwt');
+  var auth = jwt({
+    secret: 'MY_SECRET',
+    userProperty: 'payload'
+  });
+
+  var ctrlProfile = require('./controllers/profile');
+  var ctrlAuth = require('./controllers/authentication');
+
+  // profile
+  app.get('/api/profile', auth, ctrlProfile.profileRead);
+
+  // authentication
+  app.post('/api/register', ctrlAuth.register)
+
+  app.post('/api/login2', (req, res) => {
+    User1.findOne({
+      email: req.body.email,
+      password: req.body.password
+
+    }, (err, existingEvent) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      }
+      if (existingEvent) {
+        return res.status(409).send({ message: 'You have already created an event with this title, location, and start date/time.' });
+      }
+      const user = new Event({
+        title: req.body.title,
+        location: req.body.location,
+        startDatetime: req.body.startDatetime,
+        endDatetime: req.body.endDatetime,
+        description: req.body.description,
+        viewPublic: req.body.viewPublic
+      });
+      event.save((err) => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        }
+        res.send(event);
+      });
+    });
+  });
+
+
+// authenticate
+app.post('/api/login', (req, res, next) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  User1.getUserByUsername(username, (err, user) => {
+    if(err) throw err;
+    if(!user) {
+      return res.json({success: false, msg: 'User not found'});
+    }
+
+    User1.comparePassword(password, user.password, (err, isMatch) => {
+      if(err) throw err;
+      if(isMatch) {
+        const token = jwt.sign({data: user}, config.secret, {
+          expiresIn: 604800 // 1 week
+        });
+        res.json({
+          success: true,
+          token: 'JWT '+token,
+          user: {
+            id: user._id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            admin: user.admin,
+            teacher_request: user.teacher_request,
+            teacher_confirmed: user.teacher_confirmed,
+            school: user.school
+          }
+        })
+      } else {
+        return res.json({success: false, msg: 'Wrong password'});
+      }
+    });
+  });
 });
 
-var ctrlProfile = require('./controllers/profile');
-var ctrlAuth = require('./controllers/authentication');
 
-// profile
-app.get('/api/profile', auth, ctrlProfile.profileRead);
-
-// authentication
-app.post('/api/register', ctrlAuth.register)
-
-app.post('/api/login', ctrlAuth.login);
-
-   // route to log out
+  // route to log out
   app.post('/logout', function (req, res) {
     req.logOut();
     res.send(200);
@@ -159,7 +222,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // GET list of all events, public and private (admin only)
-  app.get('/api/events/admin' ,    (req, res) => {
+  app.get('/api/events/admin', (req, res) => {
     Event.find({}, _eventListProjection, (err, events) => {
       let eventsArr = [];
       if (err) {
@@ -176,7 +239,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // GET list of all donations, public and private (admin only)
-  app.get('/api/donations/admin' ,    (req, res) => {
+  app.get('/api/donations/admin', (req, res) => {
     Donation.find({}, _donationsListProjection, (err, donations) => {
       let donationsArr = [];
       if (err) {
@@ -193,7 +256,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // GET event by event ID
-  app.get('/api/event/:id' , (req, res) => {
+  app.get('/api/event/:id', (req, res) => {
     Event.findById(req.params.id, (err, event) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -206,7 +269,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // GET donatiion by event ID
-  app.get('/api/donations/:id' , (req, res) => {
+  app.get('/api/donations/:id', (req, res) => {
     Donation.findById(req.params.id, (err, event) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -219,7 +282,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // GET RSVPs by event ID
-  app.get('/api/event/:eventId/rsvps' , (req, res) => {
+  app.get('/api/event/:eventId/rsvps', (req, res) => {
     Rsvp.find({ eventId: req.params.eventId }, (err, rsvps) => {
       let rsvpsArr = [];
       if (err) {
@@ -235,7 +298,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // GET dcomments by event ID
-  app.get('/api/event/:eventId/dcomments' , (req, res) => {
+  app.get('/api/event/:eventId/dcomments', (req, res) => {
     Dcomment.find({ eventId: req.params.eventId }, (err, dcomments) => {
       let dcommentsArr = [];
       if (err) {
@@ -251,7 +314,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // GET list of upcoming events user has RSVPed to
-  app.get('/api/events/:userId' , (req, res) => {
+  app.get('/api/events/:userId', (req, res) => {
     Rsvp.find({ userId: req.params.userId }, 'eventId', (err, rsvps) => {
       const _eventIdsArr = rsvps.map(rsvp => rsvp.eventId);
       const _rsvpEventsProjection = 'title startDatetime endDatetime';
@@ -279,7 +342,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // POST a new event
-  app.post('/api/event/new' ,    (req, res) => {
+  app.post('/api/event/new', (req, res) => {
 
     Event.findOne({
       title: req.body.title,
@@ -310,7 +373,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // POST a new registration
-  app.post('/api/register/new' ,    (req, res) => {
+  app.post('/api/register/new', (req, res) => {
 
     Register.findOne({
       email: req.body.email,
@@ -337,9 +400,9 @@ app.post('/api/login', ctrlAuth.login);
     });
   });
 
-  
+
   // POST a new donation
-  app.post('/api/donations/new' ,    (req, res) => {
+  app.post('/api/donations/new', (req, res) => {
     Donation.findOne({
       itemName: req.body.itemName,
       donatedBy: req.body.donatedBy,
@@ -377,7 +440,7 @@ app.post('/api/login', ctrlAuth.login);
 
 
   // POST a new item
-  app.post('/api/item/new' ,    (req, res) => {
+  app.post('/api/item/new', (req, res) => {
     Item.findOne({
       itemName: req.body.itemName,
       donatedBy: req.body.donatedBy,
@@ -417,7 +480,7 @@ app.post('/api/login', ctrlAuth.login);
 
 
   // PUT (edit) an existing event
-  app.put('/api/event/:id' ,    (req, res) => {
+  app.put('/api/event/:id', (req, res) => {
     Event.findById(req.params.id, (err, event) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -444,7 +507,7 @@ app.post('/api/login', ctrlAuth.login);
 
 
   // PUT (edit) an existing donation
-  app.put('/api/donations/:id' ,    (req, res) => {
+  app.put('/api/donations/:id', (req, res) => {
     Donation.findById(req.params.id, (err, donation) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -473,7 +536,7 @@ app.post('/api/login', ctrlAuth.login);
 
 
   // DELETE an event and all associated RSVPs
-  app.delete('/api/event/:id' ,    (req, res) => {
+  app.delete('/api/event/:id', (req, res) => {
     Event.findById(req.params.id, (err, event) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -498,7 +561,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // DELETE an event and all associated RSVPs
-  app.delete('/api/donations/:id' ,    (req, res) => {
+  app.delete('/api/donations/:id', (req, res) => {
     Donation.findById(req.params.id, (err, event) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -523,7 +586,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // POST a new dcomment
-  app.post('/api/dcomment/new' , (req, res) => {
+  app.post('/api/dcomment/new', (req, res) => {
     Dcomment.findOne({ eventId: req.body.eventId, userId: req.body.userId }, (err, existingRsvp) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -551,7 +614,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // POST a new RSVP
-  app.post('/api/rsvp/new' , (req, res) => {
+  app.post('/api/rsvp/new', (req, res) => {
     Rsvp.findOne({ eventId: req.body.eventId, userId: req.body.userId }, (err, existingRsvp) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -577,7 +640,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // PUT (edit) an existing dcomment
-  app.put('/api/rsvp/:id' , (req, res) => {
+  app.put('/api/rsvp/:id', (req, res) => {
     Rsvp.findById(req.params.id, (err, rsvp) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -603,7 +666,7 @@ app.post('/api/login', ctrlAuth.login);
   });
 
   // PUT (edit) an existing dcomment
-  app.put('/api/dcomment/:id' , (req, res) => {
+  app.put('/api/dcomment/:id', (req, res) => {
     Dcomment.findById(req.params.id, (err, dcomment) => {
       if (err) {
         return res.status(500).send({ message: err.message });

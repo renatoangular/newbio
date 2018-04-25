@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { AuthService } from './../../../auth/auth.service';
+import { Component, Input } from '@angular/core'; 
 import { UtilsService } from './../../../core/utils.service';
 import { EventModel } from './../../../core/models/event.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-event-detail',

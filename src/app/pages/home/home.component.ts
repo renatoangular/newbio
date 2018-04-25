@@ -4,9 +4,9 @@ import { ApiService } from './../../core/api.service';
 import { UtilsService } from './../../core/utils.service';
 import { FilterSortService } from './../../core/filter-sort.service';
 import { Subscription } from 'rxjs/Subscription';
-import { EventModel } from './../../core/models/event.model';
-import { AuthService } from './../../auth/auth.service';
+import { EventModel } from './../../core/models/event.model'; 
 import { DonationsModel } from '../../core/models/donations.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',

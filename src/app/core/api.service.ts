@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from './../auth/auth.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -12,7 +11,6 @@ import { RequestModel } from './models/request.model';
 import { DonationsModel } from './models/donations.model';
 import { ItemModel } from './models/item.model';
 import { FlashMessagesService } from 'angular2-flash-messages';
-import { TokenPayload, UserDetails } from '../authentication.service';
 import { RegisterModel } from './models/register.model';
 
 @Injectable()
@@ -22,8 +20,7 @@ export class ApiService {
 
   constructor(
     private flashMessage: FlashMessagesService,
-    private http: HttpClient,
-    private auth: AuthService) { }
+    private http: HttpClient) { }
 
   private get _authHeader(): string {
     console.log(`Bearer ${localStorage.getItem('access_token')}`);
@@ -139,7 +136,7 @@ export class ApiService {
   }
 
   // register User
-  postRegister$(user: TokenPayload): Observable<TokenPayload> {
+  postRegister$(user: any): Observable<any> {
     return this.http
       .post(`${ENV.BASE_API}register`, user, {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
@@ -148,7 +145,7 @@ export class ApiService {
   }
 
   // login User
-  postLogin$(user: TokenPayload): Observable<TokenPayload> {
+  postLogin$(user: any): Observable<any> {
     return this.http
       .post(`${ENV.BASE_API}login`, user,  {
         headers: new HttpHeaders().set('Authorization', this._authHeader)
@@ -163,7 +160,6 @@ export class ApiService {
       })
       .catch(this._handleError);
       }
-
 
   // POST new donations (admin only)
   postDonations$(donations: DonationsModel): Observable<DonationsModel> {
@@ -263,6 +259,16 @@ export class ApiService {
       .catch(this._handleError);
   }
 
+    // POST new request (login required)
+    // apiURI = _isDev ? 'http://localhost:8083/api/' : `/api/`;
+    login(credentials): Observable<any> {
+      return this.http
+        .post(`${ENV.BASE_API}login`, credentials, {
+          headers: new HttpHeaders().set('Authorization', this._authHeader)
+        })
+        .catch(this._handleError);
+    }
+
 
   // PUT existing RSVP (login required)
   editRsvp$(id: string, rsvp: RsvpModel): Observable<RsvpModel> {
@@ -295,7 +301,7 @@ export class ApiService {
 
     const errorMsg = err.message || 'Error: Unable to complete request.';
     if (err.message && err.message.indexOf('itemName') > -1) {
-      this.auth.login();
+     // this.auth.login();
     }
     let errMsg = (err.message) ? err.message : err.status ? `${err.status} - ${err.statusText}` : 'Server error';
     return Observable.throw(errorMsg);

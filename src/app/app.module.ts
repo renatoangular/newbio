@@ -16,9 +16,16 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { AuthGuardService } from './auth-guard.service';
-import { AuthenticationService } from './authentication.service';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
+import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
+import { JwtModule } from '@auth0/angular-jwt';
+import { AuthenticationService } from './authentication.5555service';
+import { ToastComponent } from './core/toast/toast.component';
 
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 
 @NgModule({
   declarations: [
@@ -32,6 +39,7 @@ import { RegisterFormComponent } from './pages/register-form/register-form.compo
     LoginComponent,
     RegisterComponent,
     HomeComponent,
+    ToastComponent,
     RegisterFormComponent,
   ],
   imports: [
@@ -40,9 +48,15 @@ import { RegisterFormComponent } from './pages/register-form/register-form.compo
     AppRoutingModule,
     AuthModule.forRoot(),
     CoreModule.forRoot(),
-    FlashMessagesModule.forRoot()
+    FlashMessagesModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        // whitelistedDomains: ['localhost:3000', 'localhost:4200']
+      }
+    })
   ],
-  providers: [    AuthenticationService,
+  providers: [AuthService, UserService, AuthenticationService, ToastComponent,
     AuthGuardService],
   bootstrap: [AppComponent],
 

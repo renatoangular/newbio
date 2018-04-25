@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { AuthService } from './../../../../auth/auth.service';
+import { AuthService } from '../../../../services/auth.service';
 import { Subscription } from 'rxjs/Subscription';
 import { ApiService } from './../../../../core/api.service';
 import { RsvpModel } from './../../../../core/models/rsvp.model';
@@ -35,8 +35,8 @@ export class RsvpFormComponent implements OnInit, OnDestroy {
       // If creating a new RSVP,
       // create new RsvpModel with default data
       this.formRsvp = new RsvpModel(
-        this.auth.userProfile.sub,
-        this.auth.userProfile.name,
+        this.auth.currentUser._id,
+        this.auth.currentUser.username,
         this.eventId,
         null,
         0);

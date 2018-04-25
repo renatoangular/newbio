@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthenticationService, TokenPayload } from '../../authentication.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ApiService } from '../../core/api.service';
 import { NavController, Content, Slides } from 'ionic-angular';
 import { RegisterModel, FormRegisterModel } from '../../core/models/register.model';
-import {  FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { DatePipe } from '@angular/common';
 import { RegisterFormService } from './register-form.service';
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 
 @Component({
@@ -17,7 +18,8 @@ import { RegisterFormService } from './register-form.service';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
 
-  credentials: TokenPayload = {
+
+  credentials: {
     email: '',
     name: '',
     password: '',
@@ -48,7 +50,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
-    private auth: AuthenticationService,
+    private auth: AuthService,
+    private userService: UserService,
     private datePipe: DatePipe,
     public ef: RegisterFormService,
     private router: Router) { }
@@ -174,7 +177,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     if (!this.isEdit) {
       this.submitRegisterSub =
-        this.auth.register(this.submitRegisterObj)
+        this.userService.register(this.submitRegisterObj)
           .subscribe(
             data => this._handleSubmitSuccess(data),
             err => this._handleSubmitError(err)
@@ -191,7 +194,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   register1() {
     this.submitRegisterSub =
-      this.auth.register(this.credentials).subscribe(() => {
+      this.userService.register(this.credentials).subscribe(() => {
         this.router.navigateByUrl('/login');
       }, (err) => {
         console.error(err);

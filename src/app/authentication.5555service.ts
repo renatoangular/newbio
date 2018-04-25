@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators/map';
 import { Router } from '@angular/router';
 import { ENV } from './core/env.config';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export interface UserDetails {
   _id: string;
@@ -30,8 +31,26 @@ export interface TokenPayload {
 @Injectable()
 export class AuthenticationService {
   private token: string;
+  // Create a stream of logged in status to communicate throughout app
+  loggedIn: boolean;
+  loggedIn$ = new BehaviorSubject<boolean>(this.loggedIn);
+  currentUser: any;
+  isAdmin: boolean;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+
+    // const currentUser = this.getUserDetails();
+    const lsProfile = localStorage.getItem('profile');
+
+    if (this.tokenValid) {
+      this.currentUser = JSON.parse(lsProfile);
+      this.isAdmin = localStorage.getItem('isAdmin') === 'true';
+      this.setLoggedIn(true);
+    } else if (!this.tokenValid && lsProfile) {
+      this.logout();
+    }
+
+  }
 
   private saveToken(token: string): void {
     localStorage.setItem('mean-token', token);
@@ -41,7 +60,14 @@ export class AuthenticationService {
   private getToken(): string {
     if (!this.token) {
       this.token = localStorage.getItem('mean-token');
-      console.log('this is the token at getToken auth..svc.ts' + this.token);
+
+      let payload;
+      if (this.token) {
+        payload = this.token.split('.')[1];
+        payload = window.atob(payload);
+        console.log('payload at getUserDetails auth..svc.ts' + payload);
+        console.log('this is the token at getToken auth..svc.ts' + this.token);
+      }
     }
     return this.token;
   }
@@ -52,7 +78,6 @@ export class AuthenticationService {
     if (token) {
       payload = token.split('.')[1];
       payload = window.atob(payload);
-      console.log('payload at getUserDetails auth..svc.ts' + payload);
 
       return JSON.parse(payload);
     } else {
@@ -60,10 +85,33 @@ export class AuthenticationService {
     }
   }
 
+  private _setSession(profile?) {
+    localStorage.setItem('access_token', this.token);
+    // If initial login, set profile and admin information
+    if (profile) {
+      localStorage.setItem('profile', JSON.stringify(profile));
+      this.currentUser = profile;
+      localStorage.setItem('isAdmin', this.isAdmin.toString());
+    }
+    // Update login status in loggedIn$ stream
+    this.setLoggedIn(true);
+    // Schedule access token renewal
+
+  }
+
+
+  private _getProfile(profile) {
+    // Use access token to retrieve user's profile and set session
+    if (profile) {
+      this._setSession(profile);
+    }
+
+  }
+
   public isLoggedIn(): boolean {
-    const user = this.getUserDetails();
-    if (user) {
-      return user.exp > Date.now() / 1000;
+
+    if (this.loggedIn) {
+      return true
     } else {
       return false;
     }
@@ -81,8 +129,9 @@ export class AuthenticationService {
     const request = base.pipe(
       map((data: TokenResponse) => {
         if (data.token) {
-          console.log(data.token);
-          this.saveToken(data.token);
+        //  console.log(data.token);
+         // this.saveToken(data.token);
+        //  this.setLoggedIn(true);
         }
         return data;
       })
@@ -99,6 +148,7 @@ export class AuthenticationService {
   // postRegister
 
   public login(user: TokenPayload): Observable<any> {
+   // this.setLoggedIn(true);
     return this.request('post', 'login', user);
   }
 
@@ -106,10 +156,29 @@ export class AuthenticationService {
     return this.request('get', 'profile');
   }
 
-  public logout(): void {
+  public logout(noRedirect?: boolean): void {
+
     this.token = '';
     window.localStorage.removeItem('mean-token');
     window.localStorage.removeItem('token');
+    localStorage.removeItem('profile');
+    this.currentUser = undefined;
+    this.isAdmin = undefined;
+    this.setLoggedIn(false);
+    localStorage.removeItem('isAdmin');
     this.router.navigateByUrl('/login');
   }
+
+  setLoggedIn(value: boolean) {
+    // Update login status subject
+    this.loggedIn$.next(value);
+    this.loggedIn = value;
+  }
+  get tokenValid(): boolean {
+    // Check if current time is past access token's expiration
+    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+    return Date.now() < expiresAt;
+  }
+
+
 }
