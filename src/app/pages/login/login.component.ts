@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { AuthService } from '../../services/auth.service'; 
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -22,9 +22,9 @@ export class LoginComponent implements OnInit {
   ]);
 
   constructor(private auth: AuthService,
-              private formBuilder: FormBuilder,
-              private router: Router
-           ) { }
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     if (this.auth.loggedIn) {
