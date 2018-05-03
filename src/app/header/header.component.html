@@ -1,69 +1,71 @@
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">Biolinkdepot.org</a>
+      
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item" routerLinkActive="['active']" routerLinkActiveOptions = "{exact:true}">
+            <a class="nav-link" routerLink="['/']">Home<span></span></a>
+          </li>
+        </ul>
+          
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown" routerLinkActive="['active']" routerLinkActiveOptions = "{exact:true}">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [routerLink]="['/']">Give</a>
+          
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" routerLink="['/']">Donate Supplies</a>
+              <a class="dropdown-item" routerLink="['/']">Donate Funds</a>
+            </div>
+          </li>
+        
+
+        
+          <li class="nav-item dropdown" routerLinkActive="['active']" routerLinkActiveOptions = "{exact:true}">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [routerLink]="['/']">Receive</a>
+          
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" routerLink="['/event']">Oaklan Open House</a>
+              <a class="dropdown-item" routerLink="['/event']">Foothill Open House</a>
+            </div>
+          </li>
+        
+
+            <li class="nav-item" routerLinkActive="['active']" routerLinkActiveOptions = "{exact:true}">
+                <a class="nav-link" routerLink="['/']">Volunteer</a>
+            </li>
+            <li class="nav-item dropdown" routerLinkActive="['active']" routerLinkActiveOptions = "{exact:true}">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Learn More</a>
+                      
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" routerLink="['/']">Who We Are</a>
+              <a class="dropdown-item" routerLink="['/']">Teacher Resources</a>
+            </div>
+          </li>
+          
+        <!-- <div *ngIf="auth2.isLoggedIn && auth2.isAdmin"> -->
+          <li class="nav-item dropdown" routerLinkActive="['active']" routerLinkActiveOptions = "{exact:true}">
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" [routerLink]="['/admin']">Admin</a>
+          
+              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" routerLink="['/']">Admin Events</a>
+                <a class="dropdown-item" routerLink="['/']">Admin Donations</a>
+                <a class="dropdown-item" routerLink="['/admin/event/new']">Create Event</a>
+                <a class="dropdown-item" routerLink="['/admin/donations/new']">Create Donation</a>
+                <a class="dropdown-item" routerLink="['/']">Inventory</a>
+              </div>
+            </li>
+          <!-- </div> -->
+
+            
 
 
-<header id="header" class="header">
-  <div class="header-page bg-primary">
-    <a class="toggle-offcanvas bg-primary" (click)="toggleNav()"><span></span></a>
+        </ul>
+
+     
     
-    <h1 class="header-page-siteTitle">
-      <a routerLink="/login">Biolinkdepot.org</a>
-    </h1>
-    
-    <div *ngIf="auth2.isLoggedIn" class="header-page-authStatus">
-      <a  (click)="auth2.login()">Logggg In</a>
-      <span *ngIf="!auth2.isLoggedIn">      
-        <a (click)="onLogoutClick()">Log Out</a>
-       </span>
-    </div>
   </div>
-
-  <nav id="nav" class="nav" role="navigation">
-    <ul class="nav-list">
-        <li>
-            <a
-              *ngIf="auth2.isLoggedIn"
-              routerLink="/admin" 
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }">Admin Events</a>
-          </li>
-          <li>
-            <a
-             
-              routerLink="/donadmin"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }">Admin donations</a>
-          </li>
-
-      <li>
-        <a
-          routerLink="/"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }">Events</a>
-      </li>
-      <li>
-        <a
-          *ngIf="auth2.isLoggedIn"
-          routerLink="/my-rsvps"
-          routerLinkActive="active">My RSVPs</a>
-      </li>
-      <li>
-        <a
-          *ngIf="auth2.isLoggedIn"
-          routerLink="/donations"
-          routerLinkActive="active">Inventory</a>
-      </li>
-
-      <li>
-        <a
-          *ngIf="auth2.isLoggedIn && auth2.isAdmin"
-          routerLink="/admin/event/new"
-          routerLinkActive="active">Create Event</a>
-      </li>
-      <li>
-          <a
-            *ngIf="auth2.isLoggedIn && auth2.isAdmin"
-            routerLink="/admin/donations/new"
-            routerLinkActive="active">Create Donations</a>
-        </li>
-    </ul>
-  </nav>
-</header>
+</nav>

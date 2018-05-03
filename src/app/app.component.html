@@ -5,10 +5,12 @@
     [style.min-height]="minHeight">
 
     <!-- HEADER -->
-    <app-header (navToggled)="navToggledHandler($event)"></app-header>
-    <flash-messages></flash-messages>
+    
+    <app-header></app-header>
+    <br><br>
     <!-- CONTENT -->
     <div id="layout-view" class="layout-view">
+      <flash-messages></flash-messages>
       <router-outlet></router-outlet>
     </div>
 

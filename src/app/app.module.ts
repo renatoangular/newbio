@@ -23,6 +23,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { AuthenticationService } from './authentication.5555service';
 import { ToastComponent } from './core/toast/toast.component';
 
+
 export function tokenGetter() {
   return localStorage.getItem('token');
 }
@@ -41,6 +42,7 @@ export function tokenGetter() {
     HomeComponent,
     ToastComponent,
     RegisterFormComponent,
+    
   ],
   imports: [
     BrowserModule,
